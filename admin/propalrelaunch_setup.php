@@ -95,6 +95,20 @@ dol_fiche_head(
     "propalrelaunch@propalrelaunch"
 );
 
+echo "
+	<style type='text/css'>
+		div.detail { display:none; }
+	</style>
+	
+	<script type='text/javascript'>
+		$(function() {
+			$('span.showdetail').click(function() {
+				$(this).parent().children('div.detail').slideToggle();
+			});
+		})
+	</script>
+";
+
 // Setup page goes here
 $form=new Form($db);
 $var=false;
@@ -108,14 +122,40 @@ print '<td align="center" width="100">'.$langs->trans("Value").'</td>'."\n";
 // Example with a yes / no select
 $var=!$var;
 print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("ParamLabel").'</td>';
+print '<td>'.$langs->trans("propalRelaunchUseAttachFile").'</td>';
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="300">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
 print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
-print '<input type="hidden" name="action" value="set_CONSTNAME">';
-print $form->selectyesno("CONSTNAME",$conf->global->CONSTNAME,1);
+print '<input type="hidden" name="action" value="set_PROPALRELAUNCH_SEND_PDF">';
+print $form->selectyesno("PROPALRELAUNCH_SEND_PDF",$conf->global->PROPALRELAUNCH_SEND_PDF,1);
 print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
+print '</form>';
+print '</td></tr>';
+
+$var=!$var;
+print '<tr '.$bc[$var].'>';
+print '<td>'.$langs->trans("propalRelaunchMsgThirdParty").'<div class="detail">'.$langs->transnoentitiesnoconv('propalRelaunchToolTipMsgThirdParty').'</div></td>';
+print '<td align="center" width="20">&nbsp;</td>';
+print '<td align="right" width="300">';
+print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
+print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="action" value="set_PROPALRELAUNCH_MSG_THIRDPARTY">';
+print '<textarea name="PROPALRELAUNCH_MSG_THIRDPARTY">'.$conf->global->PROPALRELAUNCH_MSG_THIRDPARTY.'</textarea>';
+print '<input type="submit" class="button" value="'.$langs->trans("Add").'">';
+print '</form>';
+print '</td></tr>';
+
+$var=!$var;
+print '<tr '.$bc[$var].'>';
+print '<td>'.$langs->trans("propalRelaunchMsgContact").'<div class="detail">'.$langs->transnoentitiesnoconv('propalRelaunchToolTipMsgContact').'</div></td>';
+print '<td align="center" width="20">&nbsp;</td>';
+print '<td align="right" width="300">';
+print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
+print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="action" value="set_PROPALRELAUNCH_MSG_CONTACT">';
+print '<textarea name="PROPALRELAUNCH_MSG_CONTACT">'.$conf->global->PROPALRELAUNCH_MSG_CONTACT.'</textarea>';
+print '<input type="submit" class="button" value="'.$langs->trans("Add").'">';
 print '</form>';
 print '</td></tr>';
 

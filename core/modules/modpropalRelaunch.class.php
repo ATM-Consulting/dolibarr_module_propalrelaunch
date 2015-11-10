@@ -52,7 +52,7 @@ class modpropalRelaunch extends DolibarrModules
 
 		// Family can be 'crm','financial','hr','projects','products','ecm','technic','other'
 		// It is used to group modules in module setup page
-		$this->family = "other";
+		$this->family = "crm";
 		// Module label (no space allowed), used if translation string 'ModuleXXXName' not found (where XXX is value of numeric property 'numero' of module)
 		$this->name = preg_replace('/^mod/i','',get_class($this));
 		// Module description, used if translation string 'ModuleXXXDesc' not found (where XXX is value of numeric property 'numero' of module)
@@ -246,14 +246,20 @@ class modpropalRelaunch extends DolibarrModules
 	 */
 	function init($options='')
 	{
+		global $db;
+		
 		$sql = array();
 		
 		define('INC_FROM_DOLIBARR',true);
 
 		dol_include_once('/propalrelaunch/config.php');
 		dol_include_once('/propalrelaunch/script/create-maj-base.php');
+		dol_include_once('/core/class/extrafields.class.php');
 
 		$result=$this->_load_tables('/propalrelaunch/sql/');
+		
+		$e = new ExtraFields($db);
+		$e->addExtraField('date_relance', 'Date de relance', 'date', 0, '', 'propal');
 
 		return $this->_init($sql, $options);
 	}
