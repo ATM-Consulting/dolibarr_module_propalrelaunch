@@ -110,6 +110,8 @@ echo "
 	</script>
 ";
 
+print $langs->transnoentitiesnoconv('propalRelaunchScriptPath', dol_buildpath('/propalrelaunch/script/propalRelaunch.php'));
+
 // Setup page goes here
 $form=new Form($db);
 $var=false;
@@ -130,6 +132,19 @@ print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
 print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
 print '<input type="hidden" name="action" value="set_PROPALRELAUNCH_SEND_PDF">';
 print $form->selectyesno("PROPALRELAUNCH_SEND_PDF",$conf->global->PROPALRELAUNCH_SEND_PDF,1);
+print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
+print '</form>';
+print '</td></tr>';
+
+$var=!$var;
+print '<tr '.$bc[$var].'>';
+print '<td>'.$langs->trans("propalRelaunchSubject").'</td>';
+print '<td align="center" width="20">&nbsp;</td>';
+print '<td align="right" width="500">';
+print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
+print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="action" value="set_PROPALRELAUNCH_MSG_SUBJECT">';
+print '<input type="text" name="PROPALRELAUNCH_MSG_SUBJECT" value="'.$conf->global->PROPALRELAUNCH_MSG_SUBJECT.'" size="54" />&nbsp;';
 print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
 print '</form>';
 print '</td></tr>';
