@@ -98,6 +98,7 @@ dol_fiche_head(
 echo "
 	<style type='text/css'>
 		div.detail { display:none; }
+		span.showdetail { cursor:pointer; }
 	</style>
 	
 	<script type='text/javascript'>
@@ -124,7 +125,7 @@ $var=!$var;
 print '<tr '.$bc[$var].'>';
 print '<td>'.$langs->trans("propalRelaunchUseAttachFile").'</td>';
 print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="right" width="300">';
+print '<td align="right" width="500">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
 print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
 print '<input type="hidden" name="action" value="set_PROPALRELAUNCH_SEND_PDF">';
@@ -137,12 +138,12 @@ $var=!$var;
 print '<tr '.$bc[$var].'>';
 print '<td>'.$langs->trans("propalRelaunchMsgThirdParty").'<div class="detail">'.$langs->transnoentitiesnoconv('propalRelaunchToolTipMsgThirdParty').'</div></td>';
 print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="right" width="300">';
+print '<td align="right" width="500">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
 print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
 print '<input type="hidden" name="action" value="set_PROPALRELAUNCH_MSG_THIRDPARTY">';
-print '<textarea name="PROPALRELAUNCH_MSG_THIRDPARTY">'.$conf->global->PROPALRELAUNCH_MSG_THIRDPARTY.'</textarea>';
-print '<input type="submit" class="button" value="'.$langs->trans("Add").'">';
+print '<textarea style="vertical-align:middle;" cols="52" rows="10" name="PROPALRELAUNCH_MSG_THIRDPARTY">'.$conf->global->PROPALRELAUNCH_MSG_THIRDPARTY.'</textarea>&nbsp;';
+print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
 print '</form>';
 print '</td></tr>';
 
@@ -150,12 +151,12 @@ $var=!$var;
 print '<tr '.$bc[$var].'>';
 print '<td>'.$langs->trans("propalRelaunchMsgContact").'<div class="detail">'.$langs->transnoentitiesnoconv('propalRelaunchToolTipMsgContact').'</div></td>';
 print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="right" width="300">';
+print '<td align="right" width="500">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
 print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
 print '<input type="hidden" name="action" value="set_PROPALRELAUNCH_MSG_CONTACT">';
-print '<textarea name="PROPALRELAUNCH_MSG_CONTACT">'.$conf->global->PROPALRELAUNCH_MSG_CONTACT.'</textarea>';
-print '<input type="submit" class="button" value="'.$langs->trans("Add").'">';
+print '<textarea style="vertical-align:middle;" cols="52" rows="10" name="PROPALRELAUNCH_MSG_CONTACT">'.$conf->global->PROPALRELAUNCH_MSG_CONTACT.'</textarea>&nbsp;';
+print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
 print '</form>';
 print '</td></tr>';
 

@@ -61,13 +61,26 @@ if ($resql && $db->num_rows($resql) > 0)
 					$contact = new Contact($db);
 					$contact->fetch($TInfo['id']);
 					
-			 		$msg = $conf->global->PROPALRELAUNCH_MSG_CONTACT;
-					
 					$contactFound = true;
 					$mail = $TInfo['email'];
 					
 					if (isValidEmail($mail))
 					{
+						$msg = $conf->global->PROPALRELAUNCH_MSG_CONTACT;
+						
+						$prefix = '__CONTACT_';
+						$TSearch = $TVal = array();
+						foreach ($contact as $attr => $val) 
+						{
+							if (!is_array($val) && !is_object($val))
+							{
+								$TSearch[] = $prefix.$attr;
+								$TVal[] = $val;	
+							}
+						}
+						
+						$msg = str_replace($TSearch, $TVal, $msg);
+						
 						$TMail[] = $mail;
 						
 						// Construct mail
@@ -100,16 +113,22 @@ if ($resql && $db->num_rows($resql) > 0)
 				$propal->fetch_thirdparty();
 				$mail = $propal->thirdparty->email;
 				
-					foreach ($propal->thirdparty as $attr => $val) 
-					{
-						echo $langs->transnoentitiesnoconv('<b>__THIRDPARTY_'.$attr.'</b> : AAA<br />');
-						//var_dump($attr);
-					}
-					
-					var_dump('TOTO');exit;
 				if (isValidEmail($mail))
 				{
 					$msg = $conf->global->PROPALRELAUNCH_MSG_THIRDPARTY;
+					
+					$prefix = '__THIRDPARTY_';
+					$TSearch = $TVal = array();
+					foreach ($propal->thirdparty as $attr => $val) 
+					{
+						if (!is_array($val) && !is_object($val))
+						{
+							$TSearch[] = $prefix.$attr;
+							$TVal[] = $val;	
+						}
+					}
+					
+					$msg = str_replace($TSearch, $TVal, $msg);
 					
 					$TMail[] = $mail;
 					
@@ -141,7 +160,9 @@ if ($resql && $db->num_rows($resql) > 0)
 		
 	}
 
+	echo "liste des mails ok : ";
 	var_dump($TMail);
+	echo "<br />liste des mails en erreur : ";
 	var_dump($TErrorMail);
 
 }
