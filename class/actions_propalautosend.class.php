@@ -17,16 +17,16 @@
  */
 
 /**
- * \file    class/actions_propalrelaunch.class.php
- * \ingroup propalrelaunch
+ * \file    class/actions_propalautosend.class.php
+ * \ingroup propalautosend
  * \brief   This file is an example hook overload class file
  *          Put some comments here
  */
 
 /**
- * Class ActionspropalRelaunch
+ * Class ActionspropalAutoSend
  */
-class ActionspropalRelaunch
+class ActionspropalAutoSend
 {
 	/**
 	 * @var array Hook results. Propagated to $hookmanager->resArray for later reuse

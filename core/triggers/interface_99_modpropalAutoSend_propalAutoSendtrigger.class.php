@@ -17,8 +17,8 @@
  */
 
 /**
- * 	\file		core/triggers/interface_99_modMyodule_propalRelaunchtrigger.class.php
- * 	\ingroup	propalrelaunch
+ * 	\file		core/triggers/interface_99_modMyodule_propalAutoSendtrigger.class.php
+ * 	\ingroup	propalautosend
  * 	\brief		Sample trigger
  * 	\remarks	You can create other triggers by copying this one
  * 				- File name should be either:
@@ -33,7 +33,7 @@
 /**
  * Trigger class
  */
-class InterfacepropalRelaunchtrigger
+class InterfacepropalAutoSendtrigger
 {
 
     private $db;
@@ -54,7 +54,7 @@ class InterfacepropalRelaunchtrigger
             . "They are provided for tutorial purpose only.";
         // 'development', 'experimental', 'dolibarr' or version
         $this->version = 'development';
-        $this->picto = 'propalrelaunch@propalrelaunch';
+        $this->picto = 'propalautosend@propalautosend';
     }
 
     /**

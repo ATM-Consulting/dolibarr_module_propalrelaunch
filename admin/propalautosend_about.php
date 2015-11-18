@@ -18,7 +18,7 @@
 
 /**
  * 	\file		admin/about.php
- * 	\ingroup	propalrelaunch
+ * 	\ingroup	propalautosend
  * 	\brief		This file is an example about page
  * 				Put some comments here
  */
@@ -30,10 +30,10 @@ if (! $res) {
 
 // Libraries
 require_once DOL_DOCUMENT_ROOT . "/core/lib/admin.lib.php";
-require_once '../lib/propalrelaunch.lib.php';
+require_once '../lib/propalautosend.lib.php';
 
 // Translations
-$langs->load("propalrelaunch@propalrelaunch");
+$langs->load("propalautosend@propalautosend");
 
 // Access control
 if (! $user->admin) {
@@ -43,7 +43,7 @@ if (! $user->admin) {
 /*
  * View
  */
-$page_name = "propalRelaunchAbout";
+$page_name = "propalAutoSendAbout";
 llxHeader('', $langs->trans($page_name));
 
 // Subheader
@@ -52,13 +52,13 @@ $linkback = '<a href="' . DOL_URL_ROOT . '/admin/modules.php">'
 print_fiche_titre($langs->trans($page_name), $linkback);
 
 // Configuration header
-$head = propalrelaunchAdminPrepareHead();
+$head = propalautosendAdminPrepareHead();
 dol_fiche_head(
     $head,
     'about',
     $langs->trans("Module104860Name"),
     0,
-    'propalrelaunch@propalrelaunch'
+    'propalautosend@propalautosend'
 );
 
 // About page goes here

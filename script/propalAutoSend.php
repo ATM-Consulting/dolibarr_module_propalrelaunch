@@ -8,7 +8,7 @@ if(!defined('INC_FROM_DOLIBARR'))
 	require('../config.php');
 }
 
-if (empty($conf->propalrelaunch->enabled)) exit("Module is not enabled.");
+if (empty($conf->propalautosend->enabled)) exit("Module is not enabled.");
 
 dol_include_once('/comm/action/class/actioncomm.class.php');
 dol_include_once('/core/class/interfaces.class.php');

@@ -17,26 +17,26 @@
  */
 
 /**
- *	\file		lib/propalrelaunch.lib.php
- *	\ingroup	propalrelaunch
+ *	\file		lib/propalautosend.lib.php
+ *	\ingroup	propalautosend
  *	\brief		This file is an example module library
  *				Put some comments here
  */
 
-function propalrelaunchAdminPrepareHead()
+function propalautosendAdminPrepareHead()
 {
     global $langs, $conf;
 
-    $langs->load("propalrelaunch@propalrelaunch");
+    $langs->load("propalautosend@propalautosend");
 
     $h = 0;
     $head = array();
 
-    $head[$h][0] = dol_buildpath("/propalrelaunch/admin/propalrelaunch_setup.php", 1);
+    $head[$h][0] = dol_buildpath("/propalautosend/admin/propalautosend_setup.php", 1);
     $head[$h][1] = $langs->trans("Parameters");
     $head[$h][2] = 'settings';
     $h++;
-    $head[$h][0] = dol_buildpath("/propalrelaunch/admin/propalrelaunch_about.php", 1);
+    $head[$h][0] = dol_buildpath("/propalautosend/admin/propalautosend_about.php", 1);
     $head[$h][1] = $langs->trans("About");
     $head[$h][2] = 'about';
     $h++;
@@ -44,12 +44,12 @@ function propalrelaunchAdminPrepareHead()
     // Show more tabs from modules
     // Entries must be declared in modules descriptor with line
     //$this->tabs = array(
-    //	'entity:+tabname:Title:@propalrelaunch:/propalrelaunch/mypage.php?id=__ID__'
+    //	'entity:+tabname:Title:@propalautosend:/propalautosend/mypage.php?id=__ID__'
     //); // to add new tab
     //$this->tabs = array(
-    //	'entity:-tabname:Title:@propalrelaunch:/propalrelaunch/mypage.php?id=__ID__'
+    //	'entity:-tabname:Title:@propalautosend:/propalautosend/mypage.php?id=__ID__'
     //); // to remove a tab
-    complete_head_from_modules($conf, $langs, $object, $head, $h, 'propalrelaunch');
+    complete_head_from_modules($conf, $langs, $object, $head, $h, 'propalautosend');
 
     return $head;
 }

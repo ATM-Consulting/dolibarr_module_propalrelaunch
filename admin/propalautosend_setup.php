@@ -17,8 +17,8 @@
  */
 
 /**
- * 	\file		admin/propalrelaunch.php
- * 	\ingroup	propalrelaunch
+ * 	\file		admin/propalautosend.php
+ * 	\ingroup	propalautosend
  * 	\brief		This file is an example module setup page
  * 				Put some comments here
  */
@@ -30,10 +30,10 @@ if (! $res) {
 
 // Libraries
 require_once DOL_DOCUMENT_ROOT . "/core/lib/admin.lib.php";
-require_once '../lib/propalrelaunch.lib.php';
+require_once '../lib/propalautosend.lib.php';
 
 // Translations
-$langs->load("propalrelaunch@propalrelaunch");
+$langs->load("propalautosend@propalautosend");
 
 // Access control
 if (! $user->admin) {
@@ -77,7 +77,7 @@ if (preg_match('/del_(.*)/',$action,$reg))
 /*
  * View
  */
-$page_name = "propalRelaunchSetup";
+$page_name = "propalAutoSendSetup";
 llxHeader('', $langs->trans($page_name));
 
 // Subheader
@@ -86,13 +86,13 @@ $linkback = '<a href="' . DOL_URL_ROOT . '/admin/modules.php">'
 print_fiche_titre($langs->trans($page_name), $linkback);
 
 // Configuration header
-$head = propalrelaunchAdminPrepareHead();
+$head = propalautosendAdminPrepareHead();
 dol_fiche_head(
     $head,
     'settings',
     $langs->trans("Module104860Name"),
     0,
-    "propalrelaunch@propalrelaunch"
+    "propalautosend@propalautosend"
 );
 
 echo "
@@ -110,7 +110,7 @@ echo "
 	</script>
 ";
 
-print $langs->transnoentitiesnoconv('propalRelaunchScriptPath', dol_buildpath('/propalrelaunch/script/propalRelaunch.php'));
+print $langs->transnoentitiesnoconv('propalAutoSendScriptPath', dol_buildpath('/propalautosend/script/propalAutoSend.php'));
 
 // Setup page goes here
 $form=new Form($db);
@@ -125,7 +125,7 @@ print '<td align="center" width="100">'.$langs->trans("Value").'</td>'."\n";
 // Example with a yes / no select
 $var=!$var;
 print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("propalRelaunchUseAttachFile").'</td>';
+print '<td>'.$langs->trans("propalAutoSendUseAttachFile").'</td>';
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="500">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
@@ -138,7 +138,7 @@ print '</td></tr>';
 
 $var=!$var;
 print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("propalRelaunchSubject").'</td>';
+print '<td>'.$langs->trans("propalAutoSendSubject").'</td>';
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="500">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
@@ -151,7 +151,7 @@ print '</td></tr>';
 
 $var=!$var;
 print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("propalRelaunchMsgThirdParty").'<div class="detail">'.$langs->transnoentitiesnoconv('propalRelaunchToolTipMsgThirdParty').'</div></td>';
+print '<td>'.$langs->trans("propalAutoSendMsgThirdParty").'<div class="detail">'.$langs->transnoentitiesnoconv('propalAutoSendToolTipMsgThirdParty').'</div></td>';
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="500">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
@@ -164,7 +164,7 @@ print '</td></tr>';
 
 $var=!$var;
 print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("propalRelaunchMsgContact").'<div class="detail">'.$langs->transnoentitiesnoconv('propalRelaunchToolTipMsgContact').'</div></td>';
+print '<td>'.$langs->trans("propalAutoSendMsgContact").'<div class="detail">'.$langs->transnoentitiesnoconv('propalAutoSendToolTipMsgContact').'</div></td>';
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="500">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
