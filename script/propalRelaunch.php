@@ -1,5 +1,7 @@
 <?php
 
+chdir(__DIR__);
+
 if(!defined('INC_FROM_DOLIBARR')) 
 {
 	define('INC_FROM_CRON_SCRIPT', true);
