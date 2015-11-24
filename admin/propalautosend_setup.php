@@ -31,6 +31,7 @@ if (! $res) {
 // Libraries
 require_once DOL_DOCUMENT_ROOT . "/core/lib/admin.lib.php";
 require_once '../lib/propalautosend.lib.php';
+dol_include_once('/core/class/doleditor.class.php');
 
 // Translations
 $langs->load("propalautosend@propalautosend");
@@ -127,7 +128,7 @@ $var=!$var;
 print '<tr '.$bc[$var].'>';
 print '<td>'.$langs->trans("propalAutoSendUseAttachFile").'</td>';
 print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="right" width="500">';
+print '<td align="right" width="800">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
 print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
 print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_JOIN_PDF">';
@@ -140,7 +141,7 @@ $var=!$var;
 print '<tr '.$bc[$var].'>';
 print '<td>'.$langs->trans("propalAutoSendSubject").'<div class="detail">'.$langs->transnoentitiesnoconv('propalAutoSendToolTipPropalValues').'</div></td>';
 print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="right" width="500">';
+print '<td align="right" width="800">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
 print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
 print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_MSG_SUBJECT">';
@@ -149,16 +150,20 @@ print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">'
 print '</form>';
 print '</td></tr>';
 
+if ($conf->fckeditor->enabled && !empty($conf->global->FCKEDITOR_ENABLE_MAIL)) $withfckeditor = 1;
+else $withfckeditor = 0;
+
 $var=!$var;
 print '<tr '.$bc[$var].'>';
 print '<td>'.$langs->trans("propalAutoSendMsgThirdParty").'<div class="detail">'.$langs->transnoentitiesnoconv('propalAutoSendToolTipPropalValues').$langs->transnoentitiesnoconv('propalAutoSendToolTipMsgThirdParty').'</div></td>';
 print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="right" width="500">';
+print '<td align="right" width="800">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
 print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
 print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_MSG_THIRDPARTY">';
-print '<textarea style="vertical-align:middle;" cols="52" rows="10" name="PROPALAUTOSEND_MSG_THIRDPARTY">'.$conf->global->PROPALAUTOSEND_MSG_THIRDPARTY.'</textarea>&nbsp;';
-print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
+$doleditor=new DolEditor('PROPALAUTOSEND_MSG_THIRDPARTY', $conf->global->PROPALAUTOSEND_MSG_THIRDPARTY, '', 153, 'dolibarr_notes', 'In', true, true, $withfckeditor, 10, 52);
+$doleditor->Create();
+print '&nbsp;<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
 print '</form>';
 print '</td></tr>';
 
@@ -166,12 +171,13 @@ $var=!$var;
 print '<tr '.$bc[$var].'>';
 print '<td>'.$langs->trans("propalAutoSendMsgContact").'<div class="detail">'.$langs->transnoentitiesnoconv('propalAutoSendToolTipPropalValues').$langs->transnoentitiesnoconv('propalAutoSendToolTipMsgContact').'</div></td>';
 print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="right" width="500">';
+print '<td align="right" width="800">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
 print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
 print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_MSG_CONTACT">';
-print '<textarea style="vertical-align:middle;" cols="52" rows="10" name="PROPALAUTOSEND_MSG_CONTACT">'.$conf->global->PROPALAUTOSEND_MSG_CONTACT.'</textarea>&nbsp;';
-print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
+$doleditor=new DolEditor('PROPALAUTOSEND_MSG_CONTACT', $conf->global->PROPALAUTOSEND_MSG_CONTACT, '', 153, 'dolibarr_notes', 'In', true, true, $withfckeditor, 10, 52);
+$doleditor->Create();
+print '&nbsp;<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
 print '</form>';
 print '</td></tr>';
 
@@ -179,7 +185,7 @@ $var=!$var;
 print '<tr '.$bc[$var].'>';
 print '<td>'.$langs->trans("propalAutoSendDefaultNbDay").'</td>';
 print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="right" width="500">';
+print '<td align="right" width="800">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
 print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
 print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_DEFAULT_NB_DAY">';

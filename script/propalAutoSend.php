@@ -34,6 +34,8 @@ $sql = 'SELECT p.rowid FROM '.MAIN_DB_PREFIX.'propal p
 $resql = $db->query($sql);
 if ($resql && $db->num_rows($resql) > 0)
 {
+	$msgishtml = $conf->fckeditor->enabled && !empty($conf->global->FCKEDITOR_ENABLE_MAIL) ? 1 : 0;
+	
 	while ($line = $db->fetch_object($resql))
 	{
 		$subject = $conf->global->PROPALAUTOSEND_MSG_SUBJECT;
@@ -132,7 +134,7 @@ if ($resql && $db->num_rows($resql) > 0)
 							,'' //,$addr_cc=""
 							,'' //,$addr_bcc=""
 							,'' //,$deliveryreceipt=0
-							,'' //,$msgishtml=0*/
+							,$msgishtml //,$msgishtml=0*/
 							,$conf->global->MAIN_MAIL_ERRORS_TO
 							//,$css=''
 						);
@@ -188,7 +190,7 @@ if ($resql && $db->num_rows($resql) > 0)
 						,'' //,$addr_cc=""
 						,'' //,$addr_bcc=""
 						,'' //,$deliveryreceipt=0
-						,'' //,$msgishtml=0*/
+						,$msgishtml //,$msgishtml=0*/
 						,$conf->global->MAIN_MAIL_ERRORS_TO
 						//,$css=''
 					);
