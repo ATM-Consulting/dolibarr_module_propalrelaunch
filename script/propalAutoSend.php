@@ -34,6 +34,9 @@ $sql = 'SELECT p.rowid FROM '.MAIN_DB_PREFIX.'propal p
 $resql = $db->query($sql);
 if ($resql && $db->num_rows($resql) > 0)
 {
+	$subject = $conf->global->PROPALAUTOSEND_MSG_SUBJECT;
+	if (empty($subject)) exit("errorSubjectMailIsEmpty");
+	
 	while ($line = $db->fetch_object($resql))
 	{
 		$contactFound = false;
@@ -86,6 +89,7 @@ if ($resql && $db->num_rows($resql) > 0)
 					if (isValidEmail($mail))
 					{
 						$msg = $conf->global->PROPALAUTOSEND_MSG_CONTACT;
+						if (empty($msg)) exit("errorContentMailContactIsEmpty");
 						
 						$prefix = '__CONTACT_';
 						$TSearch = $TVal = array();
@@ -104,7 +108,7 @@ if ($resql && $db->num_rows($resql) > 0)
 						
 						// Construct mail
 						$CMail = new CMailFile(
-							$conf->global->PROPALAUTOSEND_MSG_SUBJECT
+							$subject
 							,$mail
 							,$conf->global->MAIN_MAIL_EMAIL_FROM
 							,$msg
@@ -135,6 +139,7 @@ if ($resql && $db->num_rows($resql) > 0)
 				if (isValidEmail($mail))
 				{
 					$msg = $conf->global->PROPALAUTOSEND_MSG_THIRDPARTY;
+					if (empty($msg)) exit("errorContentMailTirdpartyIsEmpty");
 					
 					$prefix = '__THIRDPARTY_';
 					$TSearch = $TVal = array();
@@ -153,7 +158,7 @@ if ($resql && $db->num_rows($resql) > 0)
 					
 					// Construct mail
 					$CMail = new CMailFile(
-						$conf->global->PROPALAUTOSEND_MSG_SUBJECT
+						$subject
 						,$mail
 						,$conf->global->MAIN_MAIL_EMAIL_FROM
 						,$msg
