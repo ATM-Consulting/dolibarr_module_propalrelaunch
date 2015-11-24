@@ -138,7 +138,7 @@ print '</td></tr>';
 
 $var=!$var;
 print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("propalAutoSendSubject").'</td>';
+print '<td>'.$langs->trans("propalAutoSendSubject").'<div class="detail">'.$langs->transnoentitiesnoconv('propalAutoSendToolTipPropalValues').'</div></td>';
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="500">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
@@ -151,7 +151,7 @@ print '</td></tr>';
 
 $var=!$var;
 print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("propalAutoSendMsgThirdParty").'<div class="detail">'.$langs->transnoentitiesnoconv('propalAutoSendToolTipMsgThirdParty').'</div></td>';
+print '<td>'.$langs->trans("propalAutoSendMsgThirdParty").'<div class="detail">'.$langs->transnoentitiesnoconv('propalAutoSendToolTipPropalValues').$langs->transnoentitiesnoconv('propalAutoSendToolTipMsgThirdParty').'</div></td>';
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="500">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
@@ -164,7 +164,7 @@ print '</td></tr>';
 
 $var=!$var;
 print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("propalAutoSendMsgContact").'<div class="detail">'.$langs->transnoentitiesnoconv('propalAutoSendToolTipMsgContact').'</div></td>';
+print '<td>'.$langs->trans("propalAutoSendMsgContact").'<div class="detail">'.$langs->transnoentitiesnoconv('propalAutoSendToolTipPropalValues').$langs->transnoentitiesnoconv('propalAutoSendToolTipMsgContact').'</div></td>';
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="500">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';

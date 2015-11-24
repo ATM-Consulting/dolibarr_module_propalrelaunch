@@ -34,15 +34,23 @@ $sql = 'SELECT p.rowid FROM '.MAIN_DB_PREFIX.'propal p
 $resql = $db->query($sql);
 if ($resql && $db->num_rows($resql) > 0)
 {
-	$subject = $conf->global->PROPALAUTOSEND_MSG_SUBJECT;
-	if (empty($subject)) exit("errorSubjectMailIsEmpty");
-	
 	while ($line = $db->fetch_object($resql))
 	{
+		$subject = $conf->global->PROPALAUTOSEND_MSG_SUBJECT;
+		if (empty($subject)) exit("errorSubjectMailIsEmpty");
+		
 		$contactFound = false;
 		$propal = new Propal($db);
 		$propal->fetch($line->rowid);
 		$propal->fetch_thirdparty();
+
+		$TSearchPropal = array('__PROPAL_ref', '__PROPAL_ref_client', '__PROPAL_total_ht', '__PROPAL_total_tva', '__PROPAL_total_ttc', '__PROPAL_datep', '__PROPAL_fin_validite');
+		$TValPropal = array($propal->ref, $propal->ref_client, $propal->total_ht, $propal->total_tva, $propal->total_ttc, dol_print_date($propal->datep, '%d/%m/%Y'), dol_print_date($propal->fin_validite, '%d/%m/%Y'));
+		
+		foreach ($TSearchPropal as $i => $propal_value)
+		{
+			$subject = preg_replace('/'.$propal_value.'\b/', $TValPropal[$i], $subject);
+		}
 		
 		if ($propal->user_author_id > 0)
 		{
@@ -102,7 +110,13 @@ if ($resql && $db->num_rows($resql) > 0)
 							}
 						}
 						
-						$msg = str_replace($TSearch, $TVal, $msg);
+						//Changement de méthode (pas de str_replace) pour éviter les collisions. Exemple avec __PROPAL_ref et __PROPAL_ref_client
+						foreach ($TSearchPropal as $i => $propal_value)
+						{
+							$msg = preg_replace('/'.$propal_value.'\b/', $TValPropal[$i], $msg);
+						}
+						$msg = preg_replace('/__SIGNATURE__\b/', $newUser->signature, $msg);
+						$msg = str_replace($TSearch, $TVal, $msg); 
 						
 						$TMail[] = $mail;
 						
@@ -152,6 +166,12 @@ if ($resql && $db->num_rows($resql) > 0)
 						}
 					}
 					
+					//Changement de méthode (pas de str_replace) pour éviter les collisions. Exemple avec __PROPAL_ref et __PROPAL_ref_client
+					foreach ($TSearchPropal as $i => $propal_value)
+					{
+						$msg = preg_replace('/'.$propal_value.'\b/', $TValPropal[$i], $msg);
+					}
+					$msg = preg_replace('/__SIGNATURE__\b/', $newUser->signature, $msg);
 					$msg = str_replace($TSearch, $TVal, $msg);
 					
 					$TMail[] = $mail;
