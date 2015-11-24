@@ -3,10 +3,10 @@ Module104860Desc = Envoi un mail de rappel, au contact suivi ou au tiers, des pr
 
 ATMAbout = Ce module a été développé par <a href="http://www.atm-consulting.fr" target="_blank">ATM Consulting</a><br>Vous pouvez retrouver la documentation sur notre <a href="http://wiki.atm-consulting.fr/index.php/Accueil" target="_blank">wiki</a><br><br>Pour toute question technique ou retour, contactez-nous sur <a href="mailto:support@atm-consulting.fr">support@atm-consulting.fr</a><br><br>Pour toute question commerciale, contactez-nous sur <a href="mailto:contact@atm-consulting.fr">contact@atm-consulting.fr</a> ou au +33 9 77 19 50 70<br><br>Retrouvez nos autres modules sur <a href="http://www.dolistore.com/search.php?orderby=position&orderway=desc&search_query=atm&submit_search=Rechercher" target="_blank">Dolistore</a>
 
-propalAutoSendSetup = Configuration du module propalAutoSend
-propalAutoSendAbout = A propos du module propalAutoSend
+propalAutoSendSetup = Configuration du module Relance des propositions
+propalAutoSendAbout = A propos du module Relance des propositions
 
-propalAutoSendScriptPath=<div class="warning">Commande à renseigner pour tâche planifiée : <b>php %s</b></div>
+propalAutoSendScriptPath=<div class="warning">Commande à renseigner pour tâche planifiée : <b>php %s</b><br />Attention, si le script est exécuté plusieurs fois par jour, vos contacts et/ou tiers, recevront le mail en double.</div>
 propalAutoSendUseAttachFile=Associer le PDF de la proposition au mail
 propalAutoSendSubject=Sujet du mail
 propalAutoSendMsgThirdParty=Texte de relance pour le tiers de la proposition si aucun "Contact client suivi proposition" (<span class="showdetail"><b>Afficher le détail</b></span>)
