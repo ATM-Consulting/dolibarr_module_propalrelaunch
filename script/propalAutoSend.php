@@ -55,7 +55,7 @@ if ($resql && $db->num_rows($resql) > 0)
 		$mimetype_list = array();
 		$mimefilename_list = array();
 		
-		if (!empty($conf->global->PROPALRELAUNCH_SEND_PDF))
+		if (!empty($conf->global->PROPALAUTOSEND_JOIN_PDF))
 		{
 			$ref = dol_sanitizeFileName($propal->ref);
 			
@@ -85,7 +85,7 @@ if ($resql && $db->num_rows($resql) > 0)
 					
 					if (isValidEmail($mail))
 					{
-						$msg = $conf->global->PROPALRELAUNCH_MSG_CONTACT;
+						$msg = $conf->global->PROPALAUTOSEND_MSG_CONTACT;
 						
 						$prefix = '__CONTACT_';
 						$TSearch = $TVal = array();
@@ -104,7 +104,7 @@ if ($resql && $db->num_rows($resql) > 0)
 						
 						// Construct mail
 						$CMail = new CMailFile(
-							$conf->global->PROPALRELAUNCH_MSG_SUBJECT
+							$conf->global->PROPALAUTOSEND_MSG_SUBJECT
 							,$mail
 							,$conf->global->MAIN_MAIL_EMAIL_FROM
 							,$msg
@@ -122,7 +122,7 @@ if ($resql && $db->num_rows($resql) > 0)
 						// Send mail
 						$CMail->sendfile();
 						if ($CMail->error) $TErrorMail[] = $CMail->error;
-						else _createEvent($db, $newUser, $langs, $conf, $propal, $contact->id, $conf->global->PROPALRELAUNCH_MSG_SUBJECT, $msg, 'socpeople');
+						else _createEvent($db, $newUser, $langs, $conf, $propal, $contact->id, $conf->global->PROPALAUTOSEND_MSG_SUBJECT, $msg, 'socpeople');
 					}
 					
 				}
@@ -134,7 +134,7 @@ if ($resql && $db->num_rows($resql) > 0)
 				
 				if (isValidEmail($mail))
 				{
-					$msg = $conf->global->PROPALRELAUNCH_MSG_THIRDPARTY;
+					$msg = $conf->global->PROPALAUTOSEND_MSG_THIRDPARTY;
 					
 					$prefix = '__THIRDPARTY_';
 					$TSearch = $TVal = array();
@@ -153,7 +153,7 @@ if ($resql && $db->num_rows($resql) > 0)
 					
 					// Construct mail
 					$CMail = new CMailFile(
-						$conf->global->PROPALRELAUNCH_MSG_SUBJECT
+						$conf->global->PROPALAUTOSEND_MSG_SUBJECT
 						,$mail
 						,$conf->global->MAIN_MAIL_EMAIL_FROM
 						,$msg
@@ -171,7 +171,7 @@ if ($resql && $db->num_rows($resql) > 0)
 					// Send mail
 					$CMail->sendfile();
 					if ($CMail->error) $TErrorMail[] = $CMail->error;
-					else _createEvent($db, $user, $langs, $conf, $propal, 0, $conf->global->PROPALRELAUNCH_MSG_SUBJECT, $msg);
+					else _createEvent($db, $user, $langs, $conf, $propal, 0, $conf->global->PROPALAUTOSEND_MSG_SUBJECT, $msg);
 				}
 				
 			}
