@@ -7,6 +7,7 @@ propalAutoSendSetup = Configuration du module Relance des propositions
 propalAutoSendAbout = A propos du module Relance des propositions
 
 propalAutoSendScriptPath=<div class="warning">Commande à renseigner pour tâche planifiée : <b>php %s</b><br />Attention, si le script est exécuté plusieurs fois par jour, vos contacts et/ou tiers, recevront le mail en double.</div>
+propalAutoAmountReminder = Montant minimum pour les relances
 propalAutoSendUseAttachFile=Associer le PDF de la proposition au mail
 propalAutoSendSubject=Sujet du mail (<span class="showdetail"><b>Afficher le détail</b></span>)
 propalAutoSendMsgThirdParty=Texte de relance pour le tiers de la proposition si aucun "Contact client suivi proposition" (<span class="showdetail"><b>Afficher le détail</b></span>)

@@ -7,6 +7,7 @@ propalAutoSendSetup = propalAutoSend module setup
 propalAutoSendAbout = About propalAutoSend
 
 propalAutoSendScriptPath=<div class="warning">Commande à renseigner pour tâche planifiée : <b>php %s</b><br />Attention, si le script est exécuté plusieurs fois par jour, vos contacts et/ou tiers, recevront le mail en double.</div>
+propalAutoAmountReminder = Minimal amount for reminders
 propalAutoSendUseAttachFile=Associer le PDF de la proposition au mail
 propalAutoSendSubject=Sujet du mail (<span class="showdetail"><b>Afficher le détail</b></span>)
 propalAutoSendMsgThirdParty=Texte de relance pour le tiers de la proposition si aucun "Contact client suivi proposition" (<span class="showdetail"><b>Afficher le détail</b></span>)
