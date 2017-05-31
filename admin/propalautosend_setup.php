@@ -122,6 +122,20 @@ print '<td>'.$langs->trans("Parameters").'</td>'."\n";
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="center" width="100">'.$langs->trans("Value").'</td>'."\n";
 
+// Minimal amount to do reminder
+$var=!$var;
+print '<tr '.$bc[$var].'>';
+print '<td>'.$langs->trans("propalAutoAmountReminder").'</td>';
+print '<td align="center" width="20">&nbsp;</td>';
+print '<td align="right" width="800">';
+print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
+print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_MINIMAL_AMOUNT">';
+print '<input type="text" name="PROPALAUTOSEND_MINIMAL_AMOUNT" value="'.$conf->global->PROPALAUTOSEND_MINIMAL_AMOUNT.'" size="54" />&nbsp;';
+print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
+print '</form>';
+print '</td></tr>';
+
 
 // Example with a yes / no select
 $var=!$var;
