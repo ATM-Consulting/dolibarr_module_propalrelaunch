@@ -31,7 +31,7 @@ include_once DOL_DOCUMENT_ROOT .'/core/modules/DolibarrModules.class.php';
 /**
  *  Description and activation class for module propalAutoSend
  */
-class modpropalAutoSend extends DolibarrModules
+class modPropalautosend extends DolibarrModules
 {
 	/**
 	 *   Constructor. Define names, constants, directories, boxes, permissions
@@ -248,7 +248,9 @@ class modpropalAutoSend extends DolibarrModules
 	 */
 	function init($options='')
 	{
-		global $db;
+		global $db, $user;
+		
+		include_once DOL_DOCUMENT_ROOT . '/cron/class/cronjob.class.php';
 		
 		$sql = array();
 		
@@ -262,6 +264,42 @@ class modpropalAutoSend extends DolibarrModules
 		
 		$e = new ExtraFields($db);
 		$e->addExtraField('date_relance', 'Date de relance', 'date', 0, '', 'propal');
+		
+		/* Insert CRON config */
+		$cronValues = array(
+				'label' => 'Relances propositions commerciales',
+				'jobtype' => 'method',
+				'frequency' => 1,
+				'unitfrequency' => 86400,
+				'status' => 1,
+				'module_name' => 'propalautosend',
+				'classesname' => '/propalautosend/class/propalautosendCron.class.php',
+				'objectname' => 'propalautosendCron',
+				'methodename' => 'run',
+				'params' => '',
+				'datestart' => time()
+		);
+		
+		$req = "
+			SELECT rowid
+			FROM " . MAIN_DB_PREFIX . "cronjob
+			WHERE classesname = '" . $cronValues['classesname'] . "'
+			AND module_name = '" . $cronValues['module_name'] . "'
+			AND objectname = '" . $cronValues['objectname'] . "'
+			AND methodename = '" . $cronValues['methodename'] . "'
+		";
+		
+		$res = $this->db->query($req);
+		$job = $this->db->fetch_object($res);
+		
+		if (empty($job->rowid)) {
+			$cronTask = new Cronjob($this->db);
+			foreach ($cronValues as $key => $value) {
+				$cronTask->{$key} = $value;
+			}
+				
+			$cronTask->create($user);
+		}
 
 		return $this->_init($sql, $options);
 	}
