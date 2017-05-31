@@ -114,7 +114,7 @@ class InterfacepropalAutoSendtrigger extends DolibarrTriggers
      */
     public function runTrigger($action, $object, User $user, Translate $langs, Conf $conf)
     {
-        if ($action == 'PROPAL_VALIDATE') 
+        if ($action == 'PROPAL_VALIDATE' && !empty($conf->global->PROPALAUTOSEND_CALCUL_DATE_ON_VALIDATION)) 
         {
             dol_syslog("Trigger '" . $this->name . "' for action '$action' launched by " . __FILE__ . ". id=" . $object->id);
 			
@@ -124,6 +124,17 @@ class InterfacepropalAutoSendtrigger extends DolibarrTriggers
 				$object->update_extrafields($user);
 			}
 			
+        }
+        if ($action == 'PROPAL_SENTBYMAIL' && !empty($conf->global->PROPALAUTOSEND_CALCUL_DATE_ON_EMAIL))
+        {
+        	dol_syslog("Trigger '" . $this->name . "' for action '$action' launched by " . __FILE__ . ". id=" . $object->id);
+        		
+        	if (!empty($conf->global->PROPALAUTOSEND_DEFAULT_NB_DAY) && empty($object->array_options['options_date_relance']))
+        	{
+        		$object->array_options['options_date_relance'] = date('Y-m-d', strtotime('+'.(int) $conf->global->PROPALAUTOSEND_DEFAULT_NB_DAY.' day'));
+        		$object->update_extrafields($user);
+        	}
+        		
         }
         // Executed by cron job
         if ($action == 'PROPAL_AUTOSENDBYMAIL') {
