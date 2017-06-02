@@ -31,7 +31,7 @@ include_once DOL_DOCUMENT_ROOT .'/core/modules/DolibarrModules.class.php';
 /**
  *  Description and activation class for module propalAutoSend
  */
-class modpropalAutoSend extends DolibarrModules
+class modPropalautosend extends DolibarrModules
 {
 	/**
 	 *   Constructor. Define names, constants, directories, boxes, permissions
@@ -112,7 +112,10 @@ class modpropalAutoSend extends DolibarrModules
 		// Example: $this->const=array(0=>array('MYMODULE_MYNEWCONST1','chaine','myvalue','This is a constant to add',1),
 		//                             1=>array('MYMODULE_MYNEWCONST2','chaine','myvalue','This is another constant to add',0, 'current', 1)
 		// );
-		$this->const = array();
+		$this->const = array(
+				0 => array('PROPALAUTOSEND_CALCUL_DATE_ON_VALIDATION', 'chain', '1', 'Calcul relannce_date propal validation', 1, 'current', 0),
+				1 => array('PROPALAUTOSEND_CALCUL_DATE_ON_EMAIL', 'chain', '0', 'Calcul relannce_date after propal sent by email', 1, 'current', 0)
+		);
 
 		// Array to add new pages in new tabs
 		// Example: $this->tabs = array('objecttype:+tabname1:Title1:mylangfile@propalautosend:$user->rights->propalautosend->read:/propalautosend/mynewtab1.php?id=__ID__',  	// To add a new tab identified by code tabname1
@@ -248,7 +251,9 @@ class modpropalAutoSend extends DolibarrModules
 	 */
 	function init($options='')
 	{
-		global $db;
+		global $db, $user;
+		
+		include_once DOL_DOCUMENT_ROOT . '/cron/class/cronjob.class.php';
 		
 		$sql = array();
 		
@@ -262,6 +267,42 @@ class modpropalAutoSend extends DolibarrModules
 		
 		$e = new ExtraFields($db);
 		$e->addExtraField('date_relance', 'Date de relance', 'date', 0, '', 'propal');
+		
+		/* Insert CRON config */
+		$cronValues = array(
+				'label' => 'Relances propositions commerciales',
+				'jobtype' => 'method',
+				'frequency' => 1,
+				'unitfrequency' => 86400,
+				'status' => 1,
+				'module_name' => 'propalautosend',
+				'classesname' => '/propalautosend/class/propalautosendCron.class.php',
+				'objectname' => 'propalautosendCron',
+				'methodename' => 'run',
+				'params' => '',
+				'datestart' => time()
+		);
+		
+		$req = "
+			SELECT rowid
+			FROM " . MAIN_DB_PREFIX . "cronjob
+			WHERE classesname = '" . $cronValues['classesname'] . "'
+			AND module_name = '" . $cronValues['module_name'] . "'
+			AND objectname = '" . $cronValues['objectname'] . "'
+			AND methodename = '" . $cronValues['methodename'] . "'
+		";
+		
+		$res = $this->db->query($req);
+		$job = $this->db->fetch_object($res);
+		
+		if (empty($job->rowid)) {
+			$cronTask = new Cronjob($this->db);
+			foreach ($cronValues as $key => $value) {
+				$cronTask->{$key} = $value;
+			}
+				
+			$cronTask->create($user);
+		}
 
 		return $this->_init($sql, $options);
 	}
