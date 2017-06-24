@@ -114,7 +114,8 @@ class modPropalautosend extends DolibarrModules
 		// );
 		$this->const = array(
 				0 => array('PROPALAUTOSEND_CALCUL_DATE_ON_VALIDATION', 'chain', '1', 'Calcul relannce_date propal validation', 1, 'current', 0),
-				1 => array('PROPALAUTOSEND_CALCUL_DATE_ON_EMAIL', 'chain', '0', 'Calcul relannce_date after propal sent by email', 1, 'current', 0)
+				1 => array('PROPALAUTOSEND_CALCUL_DATE_ON_EMAIL', 'chain', '0', 'Calcul relannce_date after propal sent by email', 1, 'current', 0),
+				2 => array('PROPALAUTOSEND_MAXIMAL_AMOUNT', 'chain', '0', 'Montant maximum pour les relances', 1, 'current', 0)
 		);
 
 		// Array to add new pages in new tabs
