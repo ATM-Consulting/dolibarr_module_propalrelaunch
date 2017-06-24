@@ -40,7 +40,7 @@ class propalautosendCron
 		WHERE p.entity = '.$conf->entity.'
 		AND p.fk_statut = 1
 		AND pe.date_relance = "'.$this->db->escape($today).'"
-		AND p.total_ht > "'.$conf->global->PROPALAUTOSEND_MINIMAL_AMOUNT.'"';
+		AND p.total_ht < "'.$conf->global->PROPALAUTOSEND_MAXIMAL_AMOUNT.'"';
 		
 		$resql = $this->db->query($sql);
 		if ($resql && $this->db->num_rows($resql) > 0)
