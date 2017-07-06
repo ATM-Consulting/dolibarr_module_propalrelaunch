@@ -138,12 +138,21 @@ class propalautosendCron
 								$msg = str_replace($TSearch, $TVal, $msg);
 		
 								$TMail[] = $mail;
+								
+								$from = $conf->global->MAIN_MAIL_EMAIL_FROM;
+								// Search first sales representative as email sender
+								$listsalesrepresentatives=$propal->thirdparty->getSalesRepresentatives($user);
+								$nbofsalesrepresentative=count($listsalesrepresentatives);
+								if ($nbofsalesrepresentative > 0)
+								{										
+									$from = $listsalesrepresentatives[0]['email'];
+								}
 		
 								// Construct mail
 								$CMail = new CMailFile(
 										$subject
 										,$mail
-										,$conf->global->MAIN_MAIL_EMAIL_FROM
+										,$from
 										,$msg
 										,$filename_list
 										,$mimetype_list
