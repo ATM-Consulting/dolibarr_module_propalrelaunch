@@ -122,7 +122,7 @@ print '<td>'.$langs->trans("Parameters").'</td>'."\n";
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="center" width="100">'.$langs->trans("Value").'</td>'."\n";
 
-// Minimal amount to do reminder
+// Maximal amount to do reminder
 $var=!$var;
 print '<tr '.$bc[$var].'>';
 print '<td>'.$langs->trans("propalAutoAmountReminder").'</td>';
