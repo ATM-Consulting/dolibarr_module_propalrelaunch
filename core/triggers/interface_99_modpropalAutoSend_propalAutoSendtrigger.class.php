@@ -121,7 +121,8 @@ class InterfacepropalAutoSendtrigger extends DolibarrTriggers
 			if (!empty($conf->global->PROPALAUTOSEND_DEFAULT_NB_DAY) && empty($object->array_options['options_date_relance']))
 			{
 				$object->array_options['options_date_relance'] = date('Y-m-d', strtotime('+'.(int) $conf->global->PROPALAUTOSEND_DEFAULT_NB_DAY.' day'));
-				$object->update_extrafields($user);
+				if((float) DOL_VERSION >= 7.0) $object->updateExtraField('date_relance');
+				else $object->update_extrafields($user);
 			}
 			
         }
@@ -132,7 +133,8 @@ class InterfacepropalAutoSendtrigger extends DolibarrTriggers
         	if (!empty($conf->global->PROPALAUTOSEND_DEFAULT_NB_DAY) && empty($object->array_options['options_date_relance']))
         	{
         		$object->array_options['options_date_relance'] = date('Y-m-d', strtotime('+'.(int) $conf->global->PROPALAUTOSEND_DEFAULT_NB_DAY.' day'));
-        		$object->update_extrafields($user);
+				if((float) DOL_VERSION >= 7.0) $object->updateExtraField('date_relance');
+				else $object->update_extrafields($user);
         	}
         		
         }
