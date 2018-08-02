@@ -132,7 +132,7 @@ class propalautosendCron
 								//Changement de méthode (pas de str_replace) pour éviter les collisions. Exemple avec __PROPAL_ref et __PROPAL_ref_client
 								foreach ($arraySubstitutions as $substit => $propalValue)
 								{
-									$msg = preg_replace('/'.$substit.'\b/', $propalValue[$i], $msg);
+									$msg = preg_replace('/'.$substit.'\b/', $propalValue, $msg);
 								}
 								$msg = preg_replace('/__SIGNATURE__\b/', $newUser->signature, $msg);
 								$msg = str_replace($TSearch, $TVal, $msg);
