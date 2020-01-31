@@ -39,8 +39,10 @@ class propalautosendCron
 		INNER JOIN '.MAIN_DB_PREFIX.'propal_extrafields pe ON (p.rowid = pe.fk_object)
 		WHERE p.entity = '.$conf->entity.'
 		AND p.fk_statut = 1
-		AND pe.date_relance = "'.$this->db->escape($today).'"
-		AND p.total_ht > "'.$conf->global->PROPALAUTOSEND_MINIMAL_AMOUNT.'"';
+		AND ( pe.date_relance = "'.$this->db->escape($today).'"
+    OR pe.date_relance2 = "'.$this->db->escape($today).'"
+    OR pe.date_relance3 = "'.$this->db->escape($today).'"
+		) AND p.total_ht > "'.$conf->global->PROPALAUTOSEND_MINIMAL_AMOUNT.'"';
 		
 		$resql = $this->db->query($sql);
 		if ($resql && $this->db->num_rows($resql) > 0)
@@ -61,7 +63,7 @@ class propalautosendCron
 						'__PROPAL_ref_client' => $propal->ref_client,
 						'__PROPAL_total_ht' => $propal->total_ht,
 						'__PROPAL_total_tva' => $propal->total_tva,
-						'__PROPAL_total_ttc' => $propal->total_ttc,
+						'__PROPAL_total_ttc' => number_format($propal->total_ttc, 2, '.', ''),
 						'__PROPAL_datep' => dol_print_date($propal->datep, '%d/%m/%Y'),
 						'__PROPAL_fin_validite' => dol_print_date($propal->fin_validite, '%d/%m/%Y')
 				);
@@ -143,14 +145,14 @@ class propalautosendCron
 								$CMail = new CMailFile(
 										$subject
 										,$mail
-										,$conf->global->MAIN_MAIL_EMAIL_FROM
+										,$newUser->email
 										,$msg
 										,$filename_list
 										,$mimetype_list
 										,$mimefilename_list
 										,'' //,$addr_cc=""
-										,'' //,$addr_bcc=""
-										,'' //,$deliveryreceipt=0
+										,$newUser->email
+										,$deliveryreceipt=1
 										,$msgishtml //,$msgishtml=0*/
 										,$conf->global->MAIN_MAIL_ERRORS_TO
 										//,$css=''

@@ -266,8 +266,10 @@ class modPropalautosend extends DolibarrModules
 		$result=$this->_load_tables('/propalautosend/sql/');
 		
 		$e = new ExtraFields($db);
-		$e->addExtraField('date_relance', 'Date de relance', 'date', 0, '', 'propal');
-		
+    $e->addExtraField('date_relance', '1ere relance', 'date', 0, '', 'propal');
+    $e->addExtraField('date_relance2', '2 eme relance', 'date', 0, '', 'propal');
+    $e->addExtraField('date_relance3', '3 eme relance', 'date', 0, '', 'propal');
+    
 		/* Insert CRON config */
 		$cronValues = array(
 				'label' => 'Relances propositions commerciales',

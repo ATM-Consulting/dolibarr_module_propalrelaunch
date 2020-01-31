@@ -123,6 +123,15 @@ class InterfacepropalAutoSendtrigger extends DolibarrTriggers
 				$object->array_options['options_date_relance'] = date('Y-m-d', strtotime('+'.(int) $conf->global->PROPALAUTOSEND_DEFAULT_NB_DAY.' day'));
 				if((float)DOL_VERSION < 7) $object->update_extrafields($user);
 				else $object->insertExtrafields();
+        
+        $object->array_options['options_date_relance2'] = date('Y-m-d', strtotime('+'.(int) $conf->global->PROPALAUTOSEND_SECOND_NB_DAY.' day'));
+        if((float)DOL_VERSION < 7) $object->update_extrafields($user);
+        else $object->insertExtrafields();
+
+        $object->array_options['options_date_relance3'] = date('Y-m-d', strtotime('+'.(int) $conf->global->PROPALAUTOSEND_THIRD_NB_DAY.' day'));
+        if((float)DOL_VERSION < 7) $object->update_extrafields($user);
+        else $object->insertExtrafields();
+        
 			}
 			
         }
@@ -134,7 +143,16 @@ class InterfacepropalAutoSendtrigger extends DolibarrTriggers
         	{
         		$object->array_options['options_date_relance'] = date('Y-m-d', strtotime('+'.(int) $conf->global->PROPALAUTOSEND_DEFAULT_NB_DAY.' day'));
         		if((float)DOL_VERSION < 7) $object->update_extrafields($user);
-				else $object->insertExtrafields();
+            else $object->insertExtrafields();
+            
+            $object->array_options['options_date_relance2'] = date('Y-m-d', strtotime('+'.(int) $conf->global->PROPALAUTOSEND_SECOND_NB_DAY.' day'));
+            if((float)DOL_VERSION < 7) $object->update_extrafields($user);
+            else $object->insertExtrafields();
+
+            $object->array_options['options_date_relance3'] = date('Y-m-d', strtotime('+'.(int) $conf->global->PROPALAUTOSEND_THIRD_NB_DAY.' day'));
+            if((float)DOL_VERSION < 7) $object->update_extrafields($user);
+            else $object->insertExtrafields();
+                        
         	}
         		
         }
