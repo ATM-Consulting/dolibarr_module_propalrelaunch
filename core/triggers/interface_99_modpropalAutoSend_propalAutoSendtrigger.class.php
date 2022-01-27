@@ -185,7 +185,7 @@ class InterfacepropalAutoSendtrigger extends DolibarrTriggers
         	$actioncomm->societe     = $societeforaction;
         	$actioncomm->contact     = $contactforaction;
         	$actioncomm->socid       = $societeforaction->id;
-        	$actioncomm->contactid   = $contactforaction->id;
+        	$actioncomm->contact_id   = $contactforaction->id;
         	$actioncomm->authorid    = $user->id;   // User saving action
         	$actioncomm->userownerid = $user->id;	// Owner of action
         	// Fields when action is en email (content should be added into note)

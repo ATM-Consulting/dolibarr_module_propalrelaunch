@@ -134,7 +134,7 @@ class propalautosendCron
 								{
 									$msg = preg_replace('/'.$substit.'\b/', $propalValue, $msg);
 								}
-								$msg = preg_replace('/__SIGNATURE__\b/', $newUser->signature, $msg);
+								$msg = preg_replace('/__USER_SIGNATURE__\b/', $newUser->signature, $msg);
 								$msg = str_replace($TSearch, $TVal, $msg);
 		
 								$TMail[] = $mail;
@@ -190,7 +190,7 @@ class propalautosendCron
 							{
 								$msg = preg_replace('/'.$substit.'\b/', $propalValue, $msg);
 							}
-							$msg = preg_replace('/__SIGNATURE__\b/', $newUser->signature, $msg);
+							$msg = preg_replace('/__USER_SIGNATURE__\b/', $newUser->signature, $msg);
 							$msg = str_replace($TSearch, $TVal, $msg);
 								
 							$TMail[] = $mail;

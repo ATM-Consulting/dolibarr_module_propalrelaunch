@@ -50,7 +50,7 @@ $action = GETPOST('action', 'alpha');
 if (preg_match('/set_(.*)/',$action,$reg))
 {
 	$code=$reg[1];
-	if (dolibarr_set_const($db, $code, GETPOST($code), 'chaine', 0, '', $conf->entity) > 0)
+	if (dolibarr_set_const($db, $code, GETPOST($code,'alphanohtml'), 'chaine', 0, '', $conf->entity) > 0)
 	{
 		header("Location: ".$_SERVER["PHP_SELF"]);
 		exit;
@@ -129,7 +129,7 @@ print '<td>'.$langs->trans("propalAutoAmountReminder").'</td>';
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="800">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="token" value="'.newToken().'">';
 print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_MINIMAL_AMOUNT">';
 print '<input type="text" name="PROPALAUTOSEND_MINIMAL_AMOUNT" value="'.$conf->global->PROPALAUTOSEND_MINIMAL_AMOUNT.'" size="54" />&nbsp;';
 print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
@@ -143,7 +143,7 @@ print '<td>'.$langs->trans("propalAutoSendCalculDateOnValidation").'</td>';
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="800">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="token" value="'.newToken().'">';
 print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_CALCUL_DATE_ON_VALIDATION">';
 print $form->selectyesno("PROPALAUTOSEND_CALCUL_DATE_ON_VALIDATION",$conf->global->PROPALAUTOSEND_CALCUL_DATE_ON_VALIDATION, 1);
 print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
@@ -157,7 +157,7 @@ print '<td>'.$langs->trans("propalAutoSendCalculDateOnPropaleSentByMail").'</td>
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="800">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="token" value="'.newToken().'">';
 print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_CALCUL_DATE_ON_EMAIL">';
 print $form->selectyesno("PROPALAUTOSEND_CALCUL_DATE_ON_EMAIL",$conf->global->PROPALAUTOSEND_CALCUL_DATE_ON_EMAIL, 0);
 print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
@@ -171,7 +171,7 @@ print '<td>'.$langs->trans("propalAutoSendUseAttachFile").'</td>';
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="800">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="token" value="'.newToken().'">';
 print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_JOIN_PDF">';
 print $form->selectyesno("PROPALAUTOSEND_JOIN_PDF",$conf->global->PROPALAUTOSEND_JOIN_PDF,1);
 print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
@@ -184,7 +184,7 @@ print '<td>'.$langs->trans("propalAutoSendSubject").'<div class="detail">'.$lang
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="800">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="token" value="'.newToken().'">';
 print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_MSG_SUBJECT">';
 print '<input type="text" name="PROPALAUTOSEND_MSG_SUBJECT" value="'.$conf->global->PROPALAUTOSEND_MSG_SUBJECT.'" size="54" />&nbsp;';
 print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
@@ -200,7 +200,7 @@ print '<td>'.$langs->trans("propalAutoSendMsgThirdParty").'<div class="detail">'
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="800">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="token" value="'.newToken().'">';
 print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_MSG_THIRDPARTY">';
 $doleditor=new DolEditor('PROPALAUTOSEND_MSG_THIRDPARTY', $conf->global->PROPALAUTOSEND_MSG_THIRDPARTY, '', 153, 'dolibarr_notes', 'In', true, true, $withfckeditor, 10, 52);
 $doleditor->Create();
@@ -214,7 +214,7 @@ print '<td>'.$langs->trans("propalAutoSendMsgContact").'<div class="detail">'.$l
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="800">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="token" value="'.newToken().'">';
 print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_MSG_CONTACT">';
 $doleditor=new DolEditor('PROPALAUTOSEND_MSG_CONTACT', $conf->global->PROPALAUTOSEND_MSG_CONTACT, '', 153, 'dolibarr_notes', 'In', true, true, $withfckeditor, 10, 52);
 $doleditor->Create();
@@ -228,7 +228,7 @@ print '<td>'.$langs->trans("propalAutoSendDefaultNbDay").'</td>';
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="800">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="token" value="'.newToken().'">';
 print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_DEFAULT_NB_DAY">';
 print '+&nbsp;<input type="text" name="PROPALAUTOSEND_DEFAULT_NB_DAY" value="'.$conf->global->PROPALAUTOSEND_DEFAULT_NB_DAY.'" size="5" />&nbsp;'.$langs->trans('Days').'&nbsp;';
 print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
