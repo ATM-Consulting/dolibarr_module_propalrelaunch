@@ -58,7 +58,7 @@ class modPropalautosend extends DolibarrModules
 		// Module description, used if translation string 'ModuleXXXDesc' not found (where XXX is value of numeric property 'numero' of module)
 		$this->description = "Description of module propalAutoSend";
 		// Possible values for version are: 'development', 'experimental', 'dolibarr' or version
-		$this->version = '1.2';
+		$this->version = '1.2.1';
 		// Key used in llx_const table to save module status enabled/disabled (where MYMODULE is value of property name of module in uppercase)
 		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
 		// Where to store the module in setup page (0=common,1=interface,2=others,3=very specific)
@@ -252,11 +252,11 @@ class modPropalautosend extends DolibarrModules
 	function init($options='')
 	{
 		global $db, $user;
-		
+
 		include_once DOL_DOCUMENT_ROOT . '/cron/class/cronjob.class.php';
-		
+
 		$sql = array();
-		
+
 		define('INC_FROM_DOLIBARR',true);
 
 		dol_include_once('/propalautosend/config.php');
@@ -264,10 +264,10 @@ class modPropalautosend extends DolibarrModules
 		dol_include_once('/core/class/extrafields.class.php');
 
 		$result=$this->_load_tables('/propalautosend/sql/');
-		
+
 		$e = new ExtraFields($db);
 		$e->addExtraField('date_relance', 'Date de relance', 'date', 0, '', 'propal');
-		
+
 		/* Insert CRON config */
 		$cronValues = array(
 				'label' => 'Relances propositions commerciales',
@@ -282,7 +282,7 @@ class modPropalautosend extends DolibarrModules
 				'params' => '',
 				'datestart' => time()
 		);
-		
+
 		$req = "
 			SELECT rowid
 			FROM " . MAIN_DB_PREFIX . "cronjob
@@ -291,16 +291,16 @@ class modPropalautosend extends DolibarrModules
 			AND objectname = '" . $cronValues['objectname'] . "'
 			AND methodename = '" . $cronValues['methodename'] . "'
 		";
-		
+
 		$res = $this->db->query($req);
 		$job = $this->db->fetch_object($res);
-		
+
 		if (empty($job->rowid)) {
 			$cronTask = new Cronjob($this->db);
 			foreach ($cronValues as $key => $value) {
 				$cronTask->{$key} = $value;
 			}
-				
+
 			$cronTask->create($user);
 		}
 
