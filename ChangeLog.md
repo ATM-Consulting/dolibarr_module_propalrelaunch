@@ -6,6 +6,6 @@ ___
 
 
 
-## RELEASE 1.0
+## RELEASE 1.2
 
 - FIX : remove not used file for box *02/02/2022 - 1.2.1
