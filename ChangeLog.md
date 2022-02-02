@@ -1,11 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## Version 2.0
+## Not Released
 
-- NEW : Dolibarr V13 compatibility : pleins de modifs de compat *13/01/2021* - 2.0.0
 
 
 ## RELEASE 1.2
 
 - FIX : remove not used file for box *02/02/2022 - 1.2.1
+- NEW : Dolibarr V13 compatibility : pleins de modifs de compat *13/01/2021* - 1.2.0
