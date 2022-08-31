@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 
 ## RELEASE 1.2
 
-- FIX: Compatibility V16 : newToken and family - *23/06/2022* - 1.2.2
+- FIX : Missing icon  *31/09/2022* - 1.2.3
+- FIX : Compatibility V16 : newToken and family - *23/06/2022* - 1.2.2
 - FIX : remove not used file for box *02/02/2022 - 1.2.1
 - NEW : Dolibarr V13 compatibility : pleins de modifs de compat *13/01/2021* - 1.2.0
