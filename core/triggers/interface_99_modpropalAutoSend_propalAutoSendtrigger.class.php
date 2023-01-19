@@ -155,7 +155,7 @@ class InterfacepropalAutoSendtrigger extends DolibarrTriggers
         	// Add entry in event table
         	$now=dol_now();
         	
-        	if (isset($_SESSION['listofnames-'.$object->trackid]))
+        	if (!empty($object->trackid) && isset($_SESSION['listofnames-'.$object->trackid]))
         	{
         		$attachs=$_SESSION['listofnames-'.$object->trackid];
         		if ($attachs && strpos($action,'SENTBYMAIL'))
@@ -189,14 +189,14 @@ class InterfacepropalAutoSendtrigger extends DolibarrTriggers
         	$actioncomm->authorid    = $user->id;   // User saving action
         	$actioncomm->userownerid = $user->id;	// Owner of action
         	// Fields when action is en email (content should be added into note)
-        	$actioncomm->email_msgid = $object->email_msgid;
-        	$actioncomm->email_from  = $object->email_from;
-        	$actioncomm->email_sender= $object->email_sender;
-        	$actioncomm->email_to    = $object->email_to;
-        	$actioncomm->email_tocc  = $object->email_tocc;
-        	$actioncomm->email_tobcc = $object->email_tobcc;
-        	$actioncomm->email_subject = $object->email_subject;
-        	$actioncomm->errors_to   = $object->errors_to;
+        	if(!empty($object->email_msgid)) $actioncomm->email_msgid = $object->email_msgid;
+        	if(!empty($object->email_from)) $actioncomm->email_from  = $object->email_from;
+        	if(!empty($object->email_sender)) $actioncomm->email_sender= $object->email_sender;
+        	if(!empty($object->email_to)) $actioncomm->email_to    = $object->email_to;
+        	if(!empty($object->email_tocc)) $actioncomm->email_tocc  = $object->email_tocc;
+        	if(!empty($object->email_tobcc)) $actioncomm->email_tobcc = $object->email_tobcc;
+        	if(!empty($object->email_subject)) $actioncomm->email_subject = $object->email_subject;
+        	if(!empty($object->errors_to)) $actioncomm->errors_to   = $object->errors_to;
         	
         	$actioncomm->fk_element  = $object->id;
         	$actioncomm->elementtype = $object->element;
