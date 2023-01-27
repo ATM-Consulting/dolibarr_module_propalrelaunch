@@ -40,12 +40,12 @@ class propalautosendCron
 		WHERE p.entity = '.$conf->entity.'
 		AND p.fk_statut = 1
 		AND pe.date_relance = "'.$this->db->escape($today).'"
-		AND p.total_ht > "'.$conf->global->PROPALAUTOSEND_MINIMAL_AMOUNT.'"';
+		AND p.total_ht > "'.(!empty($conf->global->PROPALAUTOSEND_MINIMAL_AMOUNT) ? $conf->global->PROPALAUTOSEND_MINIMAL_AMOUNT : '').'"';
 		
 		$resql = $this->db->query($sql);
 		if ($resql && $this->db->num_rows($resql) > 0)
 		{
-			$msgishtml = $conf->fckeditor->enabled && !empty($conf->global->FCKEDITOR_ENABLE_MAIL) ? 1 : 0;
+			$msgishtml = !empty($conf->fckeditor) && $conf->fckeditor->enabled && !empty($conf->global->FCKEDITOR_ENABLE_MAIL) ? 1 : 0;
 		
 			while ($line = $this->db->fetch_object($resql))
 			{
@@ -208,7 +208,7 @@ class propalautosendCron
 									,'' //,$addr_bcc=""
 									,'' //,$deliveryreceipt=0
 									,$msgishtml //,$msgishtml=0*/
-									,$conf->global->MAIN_MAIL_ERRORS_TO
+									,!empty($conf->global->MAIN_MAIL_ERRORS_TO) ?$conf->global->MAIN_MAIL_ERRORS_TO : ''
 									//,$css=''
 									);
 		

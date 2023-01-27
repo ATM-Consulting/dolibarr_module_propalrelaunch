@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## RELEASE 1.2
-
+- FIX : compat v17 *19/01/2023* - 1.2.4
 - FIX : Missing icon  *31/09/2022* - 1.2.3
 - FIX : Compatibility V16 : newToken and family - *23/06/2022* - 1.2.2
 - FIX : remove not used file for box *02/02/2022 - 1.2.1

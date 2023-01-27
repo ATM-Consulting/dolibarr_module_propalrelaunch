@@ -61,7 +61,7 @@ class modPropalautosend extends DolibarrModules
 		// Module description, used if translation string 'ModuleXXXDesc' not found (where XXX is value of numeric property 'numero' of module)
 		$this->description = "Description of module propalAutoSend";
 		// Possible values for version are: 'development', 'experimental', 'dolibarr' or version
-		$this->version = '1.2.2';
+		$this->version = '1.2.3';
 		// Key used in llx_const table to save module status enabled/disabled (where MYMODULE is value of property name of module in uppercase)
 		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
 		// Where to store the module in setup page (0=common,1=interface,2=others,3=very specific)
@@ -242,6 +242,35 @@ class modPropalautosend extends DolibarrModules
 		// $this->export_sql_end[$r] .=' WHERE f.fk_soc = s.rowid AND f.rowid = fd.fk_facture';
 		// $this->export_sql_order[$r] .=' ORDER BY s.nom';
 		// $r++;
+
+		$this->cronjobs = array(
+			0 => array('label' => 'Relances propositions commerciales',
+				'jobtype' => 'method',
+				'frequency' => 1,
+				'unitfrequency' => 86400,
+				'status' => 1,
+				'module_name' => 'propalautosend',
+				'class' => '/propalautosend/class/propalautosendCron.class.php',
+				'objectname' => 'propalautosendCron',
+				'method' => 'run',
+				'parameters' => '',
+				'datestart' => time())
+			//  0 => array(
+			//      'label' => 'MyJob label',
+			//      'jobtype' => 'method',
+			//      'class' => '/clieurochef/class/myobject.class.php',
+			//      'objectname' => 'MyObject',
+			//      'method' => 'doScheduledJob',
+			//      'parameters' => '',
+			//      'comment' => 'Comment',
+			//      'frequency' => 2,
+			//      'unitfrequency' => 3600,
+			//      'status' => 0,
+			//      'test' => '$conf->clieurochef->enabled',
+			//      'priority' => 50,
+			//  ),
+		);
+
 	}
 
 	/**
@@ -254,7 +283,9 @@ class modPropalautosend extends DolibarrModules
 	 */
 	function init($options='')
 	{
-		global $db, $user;
+		global $db, $user, $langs;
+
+		$langs->load('cron');
 
 		include_once DOL_DOCUMENT_ROOT . '/cron/class/cronjob.class.php';
 
