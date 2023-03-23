@@ -63,7 +63,8 @@ class propalautosendCron
 						'__PROPAL_total_tva' => $propal->total_tva,
 						'__PROPAL_total_ttc' => $propal->total_ttc,
 						'__PROPAL_datep' => dol_print_date($propal->datep, '%d/%m/%Y'),
-						'__PROPAL_fin_validite' => dol_print_date($propal->fin_validite, '%d/%m/%Y')
+						'__PROPAL_fin_validite' => dol_print_date($propal->fin_validite, '%d/%m/%Y'),
+						'__THIRDPARTY_name' => $propal->thirdparty->name
 				);
 				
 				foreach ($arraySubstitutions as $substit => $propalValue)
