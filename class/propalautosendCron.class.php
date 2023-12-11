@@ -40,16 +40,16 @@ class propalautosendCron
 		WHERE p.entity = '.$conf->entity.'
 		AND p.fk_statut = 1
 		AND pe.date_relance = "'.$this->db->escape($today).'"
-		AND p.total_ht > "'.(!empty($conf->global->PROPALAUTOSEND_MINIMAL_AMOUNT) ? $conf->global->PROPALAUTOSEND_MINIMAL_AMOUNT : '').'"';
+		AND p.total_ht > "'.getDolGlobalString('PROPALAUTOSEND_MINIMAL_AMOUNT', '') .'"';
 		
 		$resql = $this->db->query($sql);
 		if ($resql && $this->db->num_rows($resql) > 0)
 		{
-			$msgishtml = !empty($conf->fckeditor) && $conf->fckeditor->enabled && !empty($conf->global->FCKEDITOR_ENABLE_MAIL) ? 1 : 0;
+			$msgishtml = !empty($conf->fckeditor) && $conf->fckeditor->enabled && getDolGlobalString('FCKEDITOR_ENABLE_MAIL') ? 1 : 0;
 		
 			while ($line = $this->db->fetch_object($resql))
 			{
-				$subject = $conf->global->PROPALAUTOSEND_MSG_SUBJECT;
+				$subject = getDolGlobalString('PROPALAUTOSEND_MSG_SUBJECT');
 				if (empty($subject)) exit("errorSubjectMailIsEmpty");
 				$contactFound = false;
 				$propal = new Propal($this->db);
@@ -86,7 +86,7 @@ class propalautosendCron
 				$mimetype_list = array();
 				$mimefilename_list = array();
 		
-				if (!empty($conf->global->PROPALAUTOSEND_JOIN_PDF))
+				if (getDolGlobalString('PROPALAUTOSEND_JOIN_PDF'))
 				{
 					$ref = dol_sanitizeFileName($propal->ref);
 						
@@ -116,7 +116,7 @@ class propalautosendCron
 								
 							if (isValidEmail($mail))
 							{
-								$msg = $conf->global->PROPALAUTOSEND_MSG_CONTACT;
+								$msg = getDolGlobalString('PROPALAUTOSEND_MSG_CONTACT') ;
 								if (empty($msg)) exit("errorContentMailContactIsEmpty");
 		
 								$prefix = '__CONTACT_';
@@ -144,7 +144,7 @@ class propalautosendCron
 								$CMail = new CMailFile(
 										$subject
 										,$mail
-										,$conf->global->MAIN_MAIL_EMAIL_FROM
+										,getDolGlobalString('MAIN_MAIL_EMAIL_FROM')
 										,$msg
 										,$filename_list
 										,$mimetype_list
@@ -153,14 +153,14 @@ class propalautosendCron
 										,'' //,$addr_bcc=""
 										,'' //,$deliveryreceipt=0
 										,$msgishtml //,$msgishtml=0*/
-										,$conf->global->MAIN_MAIL_ERRORS_TO
+										,getDolGlobalString('MAIN_MAIL_ERRORS_TO')
 										//,$css=''
 										);
 		
 								// Send mail
 								$CMail->sendfile();
 								if ($CMail->error) $TErrorMail[] = $CMail->error;
-								else $this->_createEvent($newUser, $langs, $conf, $propal, $contact->id, $conf->global->PROPALAUTOSEND_MSG_SUBJECT, $msg, 'socpeople');
+								else $this->_createEvent($newUser, $langs, $conf, $propal, $contact->id, getDolGlobalString('PROPALAUTOSEND_MSG_SUBJECT') , $msg, 'socpeople');
 							}
 								
 						}
@@ -172,7 +172,7 @@ class propalautosendCron
 		
 						if (isValidEmail($mail))
 						{
-							$msg = $conf->global->PROPALAUTOSEND_MSG_THIRDPARTY;
+							$msg = getDolGlobalString('PROPALAUTOSEND_MSG_THIRDPARTY');
 							if (empty($msg)) exit("errorContentMailTirdpartyIsEmpty");
 								
 							$prefix = '__THIRDPARTY_';
@@ -200,7 +200,7 @@ class propalautosendCron
 							$CMail = new CMailFile(
 									$subject
 									,$mail
-									,$conf->global->MAIN_MAIL_EMAIL_FROM
+									,getDolGlobalString('MAIN_MAIL_EMAIL_FROM')
 									,$msg
 									,$filename_list
 									,$mimetype_list
@@ -209,14 +209,14 @@ class propalautosendCron
 									,'' //,$addr_bcc=""
 									,'' //,$deliveryreceipt=0
 									,$msgishtml //,$msgishtml=0*/
-									,!empty($conf->global->MAIN_MAIL_ERRORS_TO) ?$conf->global->MAIN_MAIL_ERRORS_TO : ''
+									,getDolGlobalString('MAIN_MAIL_ERRORS_TO') ? getDolGlobalString('MAIN_MAIL_ERRORS_TO')  : ''
 									//,$css=''
 									);
 		
 							// Send mail
 							$CMail->sendfile();
 							/*if ($CMail->error) $TErrorMail[] = $CMail->error;
-							 else */$this->_createEvent($user, $langs, $conf, $propal, 0, $conf->global->PROPALAUTOSEND_MSG_SUBJECT, $msg);
+							 else */$this->_createEvent($user, $langs, $conf, $propal, 0,  getDolGlobalString('PROPALAUTOSEND_MSG_SUBJECT'), $msg);
 						}
 		
 					}
