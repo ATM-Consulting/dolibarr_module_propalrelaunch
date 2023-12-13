@@ -22,11 +22,11 @@
  * \brief   This file is an example hook overload class file
  *          Put some comments here
  */
-
+require_once __DIR__ . '/../backport/v19/core/class/commonhookactions.class.php';
 /**
  * Class ActionspropalAutoSend
  */
-class ActionspropalAutoSend
+class ActionspropalAutoSend extends \propalautosend\RetroCompatCommonHookActions
 {
 	/**
 	 * @var array Hook results. Propagated to $hookmanager->resArray for later reuse
