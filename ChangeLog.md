@@ -2,12 +2,17 @@
 All notable changes to this project will be documented in this file.
 
 ## Not Released
+
+
+
+## Release 1.3
+
 - NEW : Compat V19 et php 8.2 *08/12/2023* - 1.3.0  
   Changed Dolibarr compatibility range to 12 min - 19 max  
   Change PHP compatibility range to 7.0 min - 8.2 max
 
+## Release 1.2
 
-## RELEASE 1.2
 - FIX : Interprétation de l'html dans les message à envoyer + Ajout de la clé de substitution __THIRDPARTY_name *22/03/2023* - 1.2.5
 - FIX : compat v17 *19/01/2023* - 1.2.4
 - FIX : Missing icon  *31/09/2022* - 1.2.3
