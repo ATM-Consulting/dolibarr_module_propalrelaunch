@@ -45,7 +45,7 @@ class propalautosendCron
 		$resql = $this->db->query($sql);
 		if ($resql && $this->db->num_rows($resql) > 0)
 		{
-			$msgishtml = !empty($conf->fckeditor) && $conf->fckeditor->enabled && getDolGlobalString('FCKEDITOR_ENABLE_MAIL') ? 1 : 0;
+			$msgishtml = !empty($conf->fckeditor) && isModEnabled('fckeditor') && getDolGlobalString('FCKEDITOR_ENABLE_MAIL') ? 1 : 0;
 		
 			while ($line = $this->db->fetch_object($resql))
 			{

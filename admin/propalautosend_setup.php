@@ -193,7 +193,7 @@ print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">'
 print '</form>';
 print '</td></tr>';
 
-if (!empty($conf->fckeditor) && $conf->fckeditor->enabled && getDolGlobalString('FCKEDITOR_ENABLE_MAIL')) $withfckeditor = 1;
+if (!empty($conf->fckeditor) && isModEnabled('fckeditor') && getDolGlobalString('FCKEDITOR_ENABLE_MAIL')) $withfckeditor = 1;
 else $withfckeditor = 0;
 
 $var=!$var;
