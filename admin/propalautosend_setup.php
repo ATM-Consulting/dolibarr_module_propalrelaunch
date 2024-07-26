@@ -62,7 +62,7 @@ if (preg_match('/set_(.*)/',$action,$reg))
 		dol_print_error($db);
 	}
 }
-	
+
 if (preg_match('/del_(.*)/',$action,$reg))
 {
 	$code=$reg[1];
@@ -103,7 +103,7 @@ echo "
 		div.detail { display:none; }
 		span.showdetail { cursor:pointer; }
 	</style>
-	
+
 	<script type='text/javascript'>
 		$(function() {
 			$('span.showdetail').click(function() {
@@ -193,7 +193,7 @@ print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">'
 print '</form>';
 print '</td></tr>';
 
-if (!empty($conf->fckeditor) && $conf->fckeditor->enabled && getDolGlobalString('FCKEDITOR_ENABLE_MAIL')) $withfckeditor = 1;
+if (!empty($conf->fckeditor) && isModEnabled('fckeditor') && getDolGlobalString('FCKEDITOR_ENABLE_MAIL')) $withfckeditor = 1;
 else $withfckeditor = 0;
 
 $var=!$var;

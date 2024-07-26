@@ -13,24 +13,24 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 /**
  * Class to use CRON with module propalautosend
  */
-class propalautosendCron 
+class propalautosendCron
 {
-	
+
 	public $db;
-	
+
 	function __construct(&$db) {
 		$this->db = $db;
 	}
-	
+
 	/**
-	 * Method to call with CRON module 
+	 * Method to call with CRON module
 	 */
 	public function run()
 	{
 		global $conf, $langs, $user;
-		
+
 		$langs->load('main');
-		
+
 		$TMail = array();
 		$TErrorMail = array();
 		$today = date('Y-m-d');
@@ -41,12 +41,12 @@ class propalautosendCron
 		AND p.fk_statut = 1
 		AND pe.date_relance = "'.$this->db->escape($today).'"
 		AND p.total_ht > "'.getDolGlobalString('PROPALAUTOSEND_MINIMAL_AMOUNT', '') .'"';
-		
+
 		$resql = $this->db->query($sql);
 		if ($resql && $this->db->num_rows($resql) > 0)
 		{
-			$msgishtml = !empty($conf->fckeditor) && $conf->fckeditor->enabled && getDolGlobalString('FCKEDITOR_ENABLE_MAIL') ? 1 : 0;
-		
+			$msgishtml = !empty($conf->fckeditor) && isModEnabled('fckeditor') && getDolGlobalString('FCKEDITOR_ENABLE_MAIL') ? 1 : 0;
+
 			while ($line = $this->db->fetch_object($resql))
 			{
 				$subject = getDolGlobalString('PROPALAUTOSEND_MSG_SUBJECT');
@@ -55,9 +55,9 @@ class propalautosendCron
 				$propal = new Propal($this->db);
 				$propal->fetch($line->rowid);
 				$propal->fetch_thirdparty();
-		
+
 				$arraySubstitutions = array(
-						'__PROPAL_ref' => $propal->ref, 
+						'__PROPAL_ref' => $propal->ref,
 						'__PROPAL_ref_client' => $propal->ref_client,
 						'__PROPAL_total_ht' => $propal->total_ht,
 						'__PROPAL_total_tva' => $propal->total_tva,
@@ -66,12 +66,12 @@ class propalautosendCron
 						'__PROPAL_fin_validite' => dol_print_date($propal->fin_validite, '%d/%m/%Y'),
 						'__THIRDPARTY_name' => $propal->thirdparty->name
 				);
-				
+
 				foreach ($arraySubstitutions as $substit => $propalValue)
 				{
 					$subject = preg_replace('/'.$substit.'\b/', $propalValue, $subject);
 				}
-				
+
 				if ($propal->user_author_id > 0)
 				{
 					$newUser = new User($this->db);
@@ -81,44 +81,44 @@ class propalautosendCron
 				{
 					$newUser = &$user;
 				}
-		
+
 				$filename_list = array();
 				$mimetype_list = array();
 				$mimefilename_list = array();
-		
+
 				if (getDolGlobalString('PROPALAUTOSEND_JOIN_PDF'))
 				{
 					$ref = dol_sanitizeFileName($propal->ref);
-						
+
 					$file = $conf->propal->dir_output . '/' . $ref . '/' . $ref . '.pdf';
-						
+
 					$filename = basename($file);
 					$mimefile=dol_mimetype($file);
 					$filename_list[] = $file;
 					$mimetype_list[] = $mimefile;
 					$mimefilename_list[] = $filename;
 				}
-		
+
 				if ($propal->id > 0)
 				{
 					$TContact = $propal->liste_contact(-1, 'external');
 					foreach ($TContact as $TInfo)
 					{
-		
+
 						//Contact client suivi proposition => fk_c_type_contact = 41
 						if ($TInfo['code'] == 'CUSTOMER')
 						{
 							$contact = new Contact($this->db);
 							$contact->fetch($TInfo['id']);
-								
+
 							$contactFound = true;
 							$mail = $TInfo['email'];
-								
+
 							if (isValidEmail($mail))
 							{
 								$msg = getDolGlobalString('PROPALAUTOSEND_MSG_CONTACT') ;
 								if (empty($msg)) exit("errorContentMailContactIsEmpty");
-		
+
 								$prefix = '__CONTACT_';
 								$TSearch = $TVal = array();
 								foreach ($contact as $attr => $val)
@@ -129,7 +129,7 @@ class propalautosendCron
 										$TVal[] = $val;
 									}
 								}
-		
+
 								//Changement de méthode (pas de str_replace) pour éviter les collisions. Exemple avec __PROPAL_ref et __PROPAL_ref_client
 								foreach ($arraySubstitutions as $substit => $propalValue)
 								{
@@ -137,9 +137,9 @@ class propalautosendCron
 								}
 								$msg = preg_replace('/__USER_SIGNATURE__\b/', $newUser->signature, $msg);
 								$msg = str_replace($TSearch, $TVal, $msg);
-		
+
 								$TMail[] = $mail;
-		
+
 								// Construct mail
 								$CMail = new CMailFile(
 										$subject
@@ -156,25 +156,25 @@ class propalautosendCron
 										,getDolGlobalString('MAIN_MAIL_ERRORS_TO')
 										//,$css=''
 										);
-		
+
 								// Send mail
 								$CMail->sendfile();
 								if ($CMail->error) $TErrorMail[] = $CMail->error;
 								else $this->_createEvent($newUser, $langs, $conf, $propal, $contact->id, getDolGlobalString('PROPALAUTOSEND_MSG_SUBJECT') , $msg, 'socpeople');
 							}
-								
+
 						}
 					}
-		
+
 					if (!$contactFound)
 					{
 						$mail = $propal->thirdparty->email;
-		
+
 						if (isValidEmail($mail))
 						{
 							$msg = getDolGlobalString('PROPALAUTOSEND_MSG_THIRDPARTY');
 							if (empty($msg)) exit("errorContentMailTirdpartyIsEmpty");
-								
+
 							$prefix = '__THIRDPARTY_';
 							$TSearch = $TVal = array();
 							foreach ($propal->thirdparty as $attr => $val)
@@ -185,7 +185,7 @@ class propalautosendCron
 									$TVal[] = $val;
 								}
 							}
-								
+
 							//Changement de méthode (pas de str_replace) pour éviter les collisions. Exemple avec __PROPAL_ref et __PROPAL_ref_client
 							foreach ($arraySubstitutions as $substit => $propalValue)
 							{
@@ -193,9 +193,9 @@ class propalautosendCron
 							}
 							$msg = preg_replace('/__USER_SIGNATURE__\b/', $newUser->signature, $msg);
 							$msg = str_replace($TSearch, $TVal, $msg);
-								
+
 							$TMail[] = $mail;
-								
+
 							// Construct mail
 							$CMail = new CMailFile(
 									$subject
@@ -212,19 +212,19 @@ class propalautosendCron
 									,getDolGlobalString('MAIN_MAIL_ERRORS_TO') ? getDolGlobalString('MAIN_MAIL_ERRORS_TO')  : ''
 									//,$css=''
 									);
-		
+
 							// Send mail
 							$CMail->sendfile();
 							/*if ($CMail->error) $TErrorMail[] = $CMail->error;
 							 else */$this->_createEvent($user, $langs, $conf, $propal, 0,  getDolGlobalString('PROPALAUTOSEND_MSG_SUBJECT'), $msg);
 						}
-		
+
 					}
-		
+
 				}
-		
+
 			}
-		
+
 			if (is_array($TMail) && count($TMail) > 0) {
 				$this->output = "liste des mails ok : ".implode(', ', $TMail);
 			}
@@ -234,15 +234,15 @@ class propalautosendCron
 		}
 		return 0;
 	}
-	
+
 
 	function _createEvent(&$user, &$langs, &$conf, &$propal, $fk_socpeople, $subject, $message, $type='thirdparty')
 	{
 		$actionmsg = $actionmsg2 = '';
-	
+
 		if ($type == 'thirdparty') $sendto = $propal->thirdparty->email;
 		else $sendto = $propal->thirdparty->contact_get_property((int) $fk_socpeople,'email');
-	
+
 		$actionmsg2=$langs->transnoentities('MailSentBy').' <'.$user->email.'> '.$langs->transnoentities('To').' '.$sendto;
 		if ($message)
 		{
@@ -251,7 +251,7 @@ class propalautosendCron
 			$actionmsg = dol_concatdesc($actionmsg, $langs->transnoentities('TextUsedInTheMessageBody') . ":");
 			$actionmsg = dol_concatdesc($actionmsg, $message);
 		}
-	
+
 		// Initialisation donnees
 		$propal->socid			= $propal->thirdparty->id;	// To link to a company
 		$propal->sendtoid		= $fk_socpeople;	// To link to a contact/address
@@ -260,7 +260,7 @@ class propalautosendCron
 		$propal->actionmsg2		= $actionmsg2; // Short text
 		$propal->fk_element		= $propal->id;
 		$propal->elementtype	= $propal->element;
-	
+
 		// Appel des triggers
 		$interface=new Interfaces($this->db);
 		$result=$interface->run_triggers('PROPAL_AUTOSENDBYMAIL',$propal,$user,$langs,$conf);
