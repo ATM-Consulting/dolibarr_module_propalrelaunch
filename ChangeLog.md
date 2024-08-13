@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 
 ## Not Released
-- NEW : COMPAT V20 - *26/07/2024* - 1.4.0
 
+
+
+## Release 1.4
+- NEW : COMPAT V20 - *26/07/2024* - 1.4.0
 
 ## Release 1.3
 
