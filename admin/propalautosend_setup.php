@@ -1,6 +1,6 @@
 <?php
-/* <one line to give the program's name and a brief idea of what it does.>
- * Copyright (C) 2015 ATM Consulting <support@atm-consulting.fr>
+/* Copyright (C) 2004-2017 Laurent Destailleur  <eldy@users.sourceforge.net>
+ * Copyright (C) 2022 John Botella <john.botella@atm-consulting.fr>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,232 +13,207 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /**
- * 	\file		admin/propalautosend.php
- * 	\ingroup	propalautosend
- * 	\brief		This file is an example module setup page
- * 				Put some comments here
+ * \file    propalautosend/admin/setup.php
+ * \ingroup propalautosend
+ * \brief   Propalautosend setup page.
  */
-// Dolibarr environment
-$res = @include("../../main.inc.php"); // From htdocs directory
-if (! $res) {
-    $res = @include("../../../main.inc.php"); // From "custom" directory
+
+// Load Dolibarr environment
+$res = 0;
+// Try main.inc.php into web root known defined into CONTEXT_DOCUMENT_ROOT (not always defined)
+if (!$res && !empty($_SERVER["CONTEXT_DOCUMENT_ROOT"])) {
+	$res = @include $_SERVER["CONTEXT_DOCUMENT_ROOT"]."/main.inc.php";
+}
+// Try main.inc.php into web root detected using web root calculated from SCRIPT_FILENAME
+$tmp = empty($_SERVER['SCRIPT_FILENAME']) ? '' : $_SERVER['SCRIPT_FILENAME']; $tmp2 = realpath(__FILE__); $i = strlen($tmp) - 1; $j = strlen($tmp2) - 1;
+while ($i > 0 && $j > 0 && isset($tmp[$i]) && isset($tmp2[$j]) && $tmp[$i] == $tmp2[$j]) {
+	$i--; $j--;
+}
+if (!$res && $i > 0 && file_exists(substr($tmp, 0, ($i + 1))."/main.inc.php")) {
+	$res = @include substr($tmp, 0, ($i + 1))."/main.inc.php";
+}
+if (!$res && $i > 0 && file_exists(dirname(substr($tmp, 0, ($i + 1)))."/main.inc.php")) {
+	$res = @include dirname(substr($tmp, 0, ($i + 1)))."/main.inc.php";
+}
+// Try main.inc.php using relative path
+if (!$res && file_exists("../../main.inc.php")) {
+	$res = @include "../../main.inc.php";
+}
+if (!$res && file_exists("../../../main.inc.php")) {
+	$res = @include "../../../main.inc.php";
+}
+if (!$res) {
+	die("Include of main fails");
 }
 
+global $langs, $user;
+
 // Libraries
-require_once DOL_DOCUMENT_ROOT . "/core/lib/admin.lib.php";
+require_once DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php";
 require_once '../lib/propalautosend.lib.php';
-dol_include_once('/core/class/doleditor.class.php');
+//require_once "../class/jsonWebApiResponse.class.php";
 
 // Translations
-$langs->load("propalautosend@propalautosend");
+$langs->loadLangs(array("admin", "propalautosend@propalautosend"));
 
-$newToken = function_exists('newToken') ? newToken() : $_SESSION['newtoken'];
+// Initialize technical object to manage hooks of page. Note that conf->hooks_modules contains array of hook context
+$hookmanager->initHooks(array('propalautosendsetup', 'globalsetup'));
 
 // Access control
-if (! $user->admin) {
-    accessforbidden();
+if (!$user->admin) {
+	accessforbidden();
 }
 
 // Parameters
-$action = GETPOST('action', 'alpha');
+$action = GETPOST('action', 'aZ09');
+$backtopage = GETPOST('backtopage', 'alpha');
+$modulepart = GETPOST('modulepart', 'aZ09');	// Used by actions_setmoduleoptions.inc.php
+
+$value = GETPOST('value', 'alpha');
+$label = GETPOST('label', 'alpha');
+$scandir = GETPOST('scan_dir', 'alpha');
+
+
+if(file_exists(DOL_DOCUMENT_ROOT.'/core/class/html.formsetup.class.php')){
+	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formsetup.class.php';
+}
+else{
+	require_once __DIR__ . '/../retrocompatibility/core/class/html.formsetup.class.php';
+}
+
+$error = 0;
+$setupnotempty = 0;
+
+// Set this to 1 to use the factory to manage constants. Warning, the generated module will be compatible with version v15+ only
+$useFormSetup = 0;
+// Convert arrayofparameter into a formSetup object
+
+$formSetup = new FormSetup($db);
+
+// Minimal amount to do reminder
+$item = $formSetup->newItem('PROPALAUTOSEND_MINIMAL_AMOUNT');
+$item->setAsString();
+$item->nameText = $langs->transnoentities('propalAutoAmountReminder');
+
+// Calcule `relance_date` after propale validation
+$item = $formSetup->newItem('PROPALAUTOSEND_CALCUL_DATE_ON_VALIDATION')->setAsYesNo();
+$item->nameText = $langs->transnoentities('propalAutoSendCalculDateOnValidation');
+
+// Calcule `relance_date` after propale sent by mail
+$item = $formSetup->newItem('PROPALAUTOSEND_CALCUL_DATE_ON_EMAIL')->setAsYesNo();
+$item->nameText = $langs->transnoentities('propalAutoSendCalculDateOnPropaleSentByMail');
+
+// Join pdf sent by mail
+$item = $formSetup->newItem('PROPALAUTOSEND_JOIN_PDF')->setAsYesNo();
+$item->nameText = $langs->transnoentities('propalAutoSendUseAttachFile');
+
+// Subject of mail
+$item = $formSetup->newItem('PROPALAUTOSEND_MSG_SUBJECT');
+$item->setAsString();
+$item->helpText = $langs->transnoentities('propalAutoSendToolTipPropalValues');
+$item->nameText = $langs->transnoentities('propalAutoSendSubject');
+
+// Content to thirdparty
+$item = $formSetup->newItem('PROPALAUTOSEND_MSG_THIRDPARTY');
+$item->setAsHtml();
+$item->helpText = $langs->transnoentities('propalAutoSendToolTipMsgThirdParty').$langs->transnoentitiesnoconv('propalAutoSendToolTipPropalValues');
+$item->nameText = $langs->transnoentities('propalAutoSendMsgContact');
+
+
+// Content to contact default
+$item = $formSetup->newItem('PROPALAUTOSEND_MSG_CONTACT');
+$item->setAsHtml();
+$item->helpText = $langs->transnoentities('propalAutoSendToolTipMsgContact').$langs->transnoentitiesnoconv('propalAutoSendToolTipPropalValues');
+$item->nameText = $langs->transnoentities('propalAutoSendMsgContact');
+
+//Delay
+$item = $formSetup->newItem('PROPALAUTOSEND_DEFAULT_NB_DAY');
+$item->setAsString();
+$item->nameText = $langs->transnoentities('propalAutoSendDefaultNbDay');
+
+$setupnotempty = count($formSetup->items);
+
+
 
 /*
  * Actions
  */
-if (preg_match('/set_(.*)/',$action,$reg))
-{
-	$code=$reg[1];
-	if (dolibarr_set_const($db, $code, GETPOST($code,'html'), 'chaine', 0, '', $conf->entity) > 0)
-	{
-		header("Location: ".$_SERVER["PHP_SELF"]);
-		exit;
-	}
-	else
-	{
-		dol_print_error($db);
-	}
-}
 
-if (preg_match('/del_(.*)/',$action,$reg))
-{
-	$code=$reg[1];
-	if (dolibarr_del_const($db, $code, 0) > 0)
-	{
-		Header("Location: ".$_SERVER["PHP_SELF"]);
-		exit;
-	}
-	else
-	{
-		dol_print_error($db);
-	}
-}
+include DOL_DOCUMENT_ROOT.'/core/actions_setmoduleoptions.inc.php';
 
 /*
  * View
  */
+
+$form = new Form($db);
+
+$help_url = '';
 $page_name = "propalAutoSendSetup";
-llxHeader('', $langs->trans($page_name));
+
+llxHeader('', $langs->trans($page_name), $help_url);
 
 // Subheader
-$linkback = '<a href="' . DOL_URL_ROOT . '/admin/modules.php">'
-    . $langs->trans("BackToModuleList") . '</a>';
-print_fiche_titre($langs->trans($page_name), $linkback, 'title_setup.png');
+$linkback = '<a href="'.($backtopage ? $backtopage : DOL_URL_ROOT.'/admin/modules.php?restore_lastsearch_values=1').'">'.$langs->trans("BackToModuleList").'</a>';
+
+print load_fiche_titre($langs->trans($page_name), $linkback, 'title_setup');
 
 // Configuration header
 $head = propalautosendAdminPrepareHead();
-dol_fiche_head(
-    $head,
-    'settings',
-    $langs->trans("Module104860Name"),
-    0,
-    "propalautosend@propalautosend"
-);
+print dol_get_fiche_head($head, 'settings', $langs->trans($page_name), -1, "propalautosend@propalautosend");
 
-echo "
-	<style type='text/css'>
-		div.detail { display:none; }
-		span.showdetail { cursor:pointer; }
-	</style>
-
-	<script type='text/javascript'>
-		$(function() {
-			$('span.showdetail').click(function() {
-				$(this).parent().children('div.detail').slideToggle();
-			});
-		})
-	</script>
-";
+// Setup page goes here
+echo '<span class="opacitymedium">'.$langs->trans("propalAutoSendSetup").'</span><br><br>';
 
 print $langs->transnoentitiesnoconv('propalAutoSendScriptPath', dol_buildpath('/propalautosend/script/propalAutoSend.php'));
 
-// Setup page goes here
-$form=new Form($db);
-$var=false;
-print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre">';
-print '<td>'.$langs->trans("Parameters").'</td>'."\n";
-print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="center" width="100">'.$langs->trans("Value").'</td>'."\n";
+if ($action == 'edit') {
+	print $formSetup->generateOutput(true);
 
-// Minimal amount to do reminder
-$var=!$var;
-print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("propalAutoAmountReminder").'</td>';
-print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="right" width="800">';
-print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-print '<input type="hidden" name="token" value="'.$newToken.'">';
-print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_MINIMAL_AMOUNT">';
-print '<input type="text" name="PROPALAUTOSEND_MINIMAL_AMOUNT" value="'.getDolGlobalString('PROPALAUTOSEND_MINIMAL_AMOUNT', '').'" size="54" />&nbsp;';
-print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
-print '</form>';
-print '</td></tr>';
+	?>
+	<script>
+		const inputField = document.getElementById('setup-PROPALAUTOSEND_DEFAULT_NB_DAY');
 
-// Calcul `relance_date` after propale validation
-$var=!$var;
-print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("propalAutoSendCalculDateOnValidation").'</td>';
-print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="right" width="800">';
-print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-print '<input type="hidden" name="token" value="'.$newToken.'">';
-print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_CALCUL_DATE_ON_VALIDATION">';
-print $form->selectyesno("PROPALAUTOSEND_CALCUL_DATE_ON_VALIDATION",getDolGlobalString('PROPALAUTOSEND_CALCUL_DATE_ON_VALIDATION') , 1);
-print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
-print '</form>';
-print '</td></tr>';
+		if (inputField) {
+			const span = document.createElement('span');
+			span.className = 'fa fa-plus'; // Ajouter les classes
 
-// Calcul `relance_date` after propale sent by mail
-$var=!$var;
-print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("propalAutoSendCalculDateOnPropaleSentByMail").'</td>';
-print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="right" width="800">';
-print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-print '<input type="hidden" name="token" value="'.$newToken.'">';
-print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_CALCUL_DATE_ON_EMAIL">';
-print $form->selectyesno("PROPALAUTOSEND_CALCUL_DATE_ON_EMAIL",getDolGlobalString('PROPALAUTOSEND_CALCUL_DATE_ON_EMAIL') , 0);
-print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
-print '</form>';
-print '</td></tr>';
+			const paragraph = document.createElement('p');
+			paragraph.textContent = 'Jours';
 
-// Example with a yes / no select
-$var=!$var;
-print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("propalAutoSendUseAttachFile").'</td>';
-print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="right" width="800">';
-print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-print '<input type="hidden" name="token" value="'.$newToken.'">';
-print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_JOIN_PDF">';
-print $form->selectyesno("PROPALAUTOSEND_JOIN_PDF", getDolGlobalString('PROPALAUTOSEND_JOIN_PDF'),1);
-print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
-print '</form>';
-print '</td></tr>';
+			const tdParent = inputField.closest('td');
 
-$var=!$var;
-print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("propalAutoSendSubject").'<div class="detail">'.$langs->transnoentitiesnoconv('propalAutoSendToolTipPropalValues').'</div></td>';
-print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="right" width="800">';
-print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-print '<input type="hidden" name="token" value="'.$newToken.'">';
-print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_MSG_SUBJECT">';
-print '<input type="text" name="PROPALAUTOSEND_MSG_SUBJECT" value="' . getDolGlobalString('PROPALAUTOSEND_MSG_SUBJECT').'" size="54" />&nbsp;';
-print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
-print '</form>';
-print '</td></tr>';
+			if (tdParent) {
+				tdParent.style.display = 'flex';
+				tdParent.style.alignItems = 'center';
 
-if (!empty($conf->fckeditor) && isModEnabled('fckeditor') && getDolGlobalString('FCKEDITOR_ENABLE_MAIL')) $withfckeditor = 1;
-else $withfckeditor = 0;
+				tdParent.insertBefore(span, inputField);
+				tdParent.appendChild(paragraph);
+			}
 
-$var=!$var;
-print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("propalAutoSendMsgThirdParty").'<div class="detail">'.$langs->transnoentitiesnoconv('propalAutoSendToolTipPropalValues').$langs->transnoentitiesnoconv('propalAutoSendToolTipMsgThirdParty').'</div></td>';
-print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="right" width="800">';
-print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-print '<input type="hidden" name="token" value="'.$newToken.'">';
-print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_MSG_THIRDPARTY">';
-$doleditor=new DolEditor('PROPALAUTOSEND_MSG_THIRDPARTY', getDolGlobalString('PROPALAUTOSEND_MSG_THIRDPARTY', ''), '', 153, 'dolibarr_notes', 'In', true, true, $withfckeditor, 10, 52);
-$doleditor->Create();
-print '&nbsp;<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
-print '</form>';
-print '</td></tr>';
+		}
+	</script>
 
-$var=!$var;
-print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("propalAutoSendMsgContact").'<div class="detail">'.$langs->transnoentitiesnoconv('propalAutoSendToolTipPropalValues').$langs->transnoentitiesnoconv('propalAutoSendToolTipMsgContact').'</div></td>';
-print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="right" width="800">';
-print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-print '<input type="hidden" name="token" value="'.$newToken.'">';
-print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_MSG_CONTACT">';
-$doleditor=new DolEditor('PROPALAUTOSEND_MSG_CONTACT', getDolGlobalString('PROPALAUTOSEND_MSG_CONTACT', ''), '', 153, 'dolibarr_notes', 'In', true, true, $withfckeditor, 10, 52);
-$doleditor->Create();
-print '&nbsp;<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
-print '</form>';
-print '</td></tr>';
+	<?php
 
-$var=!$var;
-print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("propalAutoSendDefaultNbDay").'</td>';
-print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="right" width="800">';
-print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-print '<input type="hidden" name="token" value="'.$newToken.'">';
-print '<input type="hidden" name="action" value="set_PROPALAUTOSEND_DEFAULT_NB_DAY">';
-print '+&nbsp;<input type="text" name="PROPALAUTOSEND_DEFAULT_NB_DAY" value="'.getDolGlobalString('PROPALAUTOSEND_DEFAULT_NB_DAY', '').'" size="5" />&nbsp;'.$langs->trans('Days').'&nbsp;';
-print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
-print '</form>';
-print '</td></tr>';
+} else {
+	if ($setupnotempty) {
+		print $formSetup->generateOutput();
 
-print '</table>';
+		print '<div class="tabsAction">';
+		print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?action=edit&token='.newToken().'">'.$langs->trans("Modify").'</a>';
+		print '</div>';
+	} else {
+		print '<br>'.$langs->trans("NothingToSetup");
+	}
+
+}
+
+// Page end
+print dol_get_fiche_end();
 
 llxFooter();
-
 $db->close();

@@ -114,47 +114,45 @@ class InterfacepropalAutoSendtrigger extends DolibarrTriggers
      */
     public function runTrigger($action, $object, User $user, Translate $langs, Conf $conf)
     {
-        if ($action == 'PROPAL_VALIDATE' && getDolGlobalString('PROPALAUTOSEND_CALCUL_DATE_ON_VALIDATION')) 
+        if ($action == 'PROPAL_VALIDATE' && getDolGlobalString('PROPALAUTOSEND_CALCUL_DATE_ON_VALIDATION'))
         {
             dol_syslog("Trigger '" . $this->name . "' for action '$action' launched by " . __FILE__ . ". id=" . $object->id);
-			
+
 			if (getDolGlobalString('PROPALAUTOSEND_DEFAULT_NB_DAY') && empty($object->array_options['options_date_relance']))
 			{
 				$object->array_options['options_date_relance'] = date('Y-m-d', strtotime('+'. getDolGlobalInt('PROPALAUTOSEND_DEFAULT_NB_DAY') .' day'));
-				if((float)DOL_VERSION < 7) $object->update_extrafields($user);
-				else $object->insertExtrafields();
+				$object->insertExtrafields();
 			}
-			
+
         }
         if ($action == 'PROPAL_SENTBYMAIL' && getDolGlobalString('PROPALAUTOSEND_CALCUL_DATE_ON_EMAIL'))
         {
         	dol_syslog("Trigger '" . $this->name . "' for action '$action' launched by " . __FILE__ . ". id=" . $object->id);
-        		
+
         	if (getDolGlobalString('PROPALAUTOSEND_DEFAULT_NB_DAY') && empty($object->array_options['options_date_relance']))
         	{
         		$object->array_options['options_date_relance'] = date('Y-m-d', strtotime('+'.getDolGlobalInt('PROPALAUTOSEND_DEFAULT_NB_DAY') .' day'));
-        		if((float)DOL_VERSION < 7) $object->update_extrafields($user);
-				else $object->insertExtrafields();
+				$object->insertExtrafields();
         	}
-        		
+
         }
         // Executed by cron job
         if ($action == 'PROPAL_AUTOSENDBYMAIL') {
-        	
+
         	$langs->load("agenda");
         	$langs->load("other");
         	$langs->load("propal");
-        	
+
         	if (empty($object->actionmsg2)) $object->actionmsg2=$langs->transnoentities("ProposalSentByEMail",$object->ref);
         	if (empty($object->actionmsg))
         	{
         		$object->actionmsg=$langs->transnoentities("ProposalSentByEMail",$object->ref);
         		$object->actionmsg.="\n".$langs->transnoentities("Author").': '.$user->login;
         	}
-        	
+
         	// Add entry in event table
         	$now=dol_now();
-        	
+
         	if (!empty($object->trackid) && isset($_SESSION['listofnames-'.$object->trackid]))
         	{
         		$attachs=$_SESSION['listofnames-'.$object->trackid];
@@ -163,14 +161,14 @@ class InterfacepropalAutoSendtrigger extends DolibarrTriggers
         			$object->actionmsg=dol_concatdesc($object->actionmsg, "\n".$langs->transnoentities("AttachedFiles").': '.$attachs);
         		}
         	}
-        	
+
         	require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
         	require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
         	$contactforaction=new Contact($this->db);
         	$societeforaction=new Societe($this->db);
         	if ($object->sendtoid > 0) $contactforaction->fetch($object->sendtoid);
         	if ($object->socid > 0)    $societeforaction->fetch($object->socid);
-        	
+
         	// Insertion action
         	require_once DOL_DOCUMENT_ROOT.'/comm/action/class/actioncomm.class.php';
         	$actioncomm = new ActionComm($this->db);
@@ -197,14 +195,14 @@ class InterfacepropalAutoSendtrigger extends DolibarrTriggers
         	if(!empty($object->email_tobcc)) $actioncomm->email_tobcc = $object->email_tobcc;
         	if(!empty($object->email_subject)) $actioncomm->email_subject = $object->email_subject;
         	if(!empty($object->errors_to)) $actioncomm->errors_to   = $object->errors_to;
-        	
+
         	$actioncomm->fk_element  = $object->id;
         	$actioncomm->elementtype = $object->element;
-        	
+
         	$ret=$actioncomm->create($user);       // User creating action
-        	
+
         	unset($object->actionmsg); unset($object->actionmsg2); unset($object->actiontypecode);	// When several action are called on same object, we must be sure to not reuse value of first action.
-        	
+
         	if ($ret > 0)
         	{
         		$_SESSION['LAST_ACTION_CREATED'] = $ret;
@@ -215,11 +213,11 @@ class InterfacepropalAutoSendtrigger extends DolibarrTriggers
         		$error ="Failed to insert event : ".$actioncomm->error." ".join(',',$actioncomm->errors);
         		$this->error=$error;
         		$this->errors=$actioncomm->errors;
-        	
+
         		dol_syslog(__METHOD__.": ".$this->error, LOG_ERR);
         		return -1;
         	}
-        	
+
         }
         return 0;
     }
