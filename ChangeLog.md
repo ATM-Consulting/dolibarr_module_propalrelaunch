@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 ## Not Released
 
 ## Release 1.5
-- NEW : COMPAT V20 - **17/12/2024** - 1.5.0
+- NEW : COMPAT V21 - **17/12/2024** - 1.5.0
         Refonte admin avec le Formsetup, l'ancienne méthode ne permettais plus de sauvegarder les données en bdd 
         Fix : Contrôle de l'existance du pdf avant envoie de mail
 
