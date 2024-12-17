@@ -133,6 +133,7 @@ $item->nameText = $langs->transnoentities('propalAutoSendMsgContact');
 //Delay
 $item = $formSetup->newItem('PROPALAUTOSEND_DEFAULT_NB_DAY');
 $item->setAsString();
+$item->helpText = $langs->transnoentities('propalAutoSendDefaultNbDayToolTips');
 $item->nameText = $langs->transnoentities('propalAutoSendDefaultNbDay');
 
 $setupnotempty = count($formSetup->items);
