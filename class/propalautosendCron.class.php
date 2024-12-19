@@ -86,11 +86,12 @@ class propalautosendCron
 				$mimetype_list = array();
 				$mimefilename_list = array();
 
-				if (getDolGlobalString('PROPALAUTOSEND_JOIN_PDF'))
-				{
-					$ref = dol_sanitizeFileName($propal->ref);
+				$ref = dol_sanitizeFileName($propal->ref);
+				$file = $conf->propal->dir_output . '/' . $ref . '/' . $ref . '.pdf';
 
-					$file = $conf->propal->dir_output . '/' . $ref . '/' . $ref . '.pdf';
+				if (getDolGlobalString('PROPALAUTOSEND_JOIN_PDF') && file_exists($file))
+				{
+
 
 					$filename = basename($file);
 					$mimefile=dol_mimetype($file);
