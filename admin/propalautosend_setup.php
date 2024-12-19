@@ -55,7 +55,6 @@ global $langs, $user;
 // Libraries
 require_once DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php";
 require_once '../lib/propalautosend.lib.php';
-//require_once "../class/jsonWebApiResponse.class.php";
 
 // Translations
 $langs->loadLangs(array("admin", "propalautosend@propalautosend"));
@@ -176,6 +175,7 @@ if ($action == 'edit') {
 
 	?>
 	<script>
+		//script pour ajouter le logo + et la mention jours dans la conf PROPALAUTOSEND_DEFAULT_NB_DAY
 		const inputField = document.getElementById('setup-PROPALAUTOSEND_DEFAULT_NB_DAY');
 
 		if (inputField) {
